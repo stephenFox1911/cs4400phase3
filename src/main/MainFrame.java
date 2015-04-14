@@ -1,4 +1,5 @@
 package main;
+
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.EventQueue;
@@ -7,13 +8,18 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import loginView.FirstView;
-import UserView.UserView;
-
+import UserView.LoggedInView;
+/**
+ * The Frame of the application
+ * Contains Main Method
+ * @author JWJibilian
+ *
+ */
 public class MainFrame {
 
     private static JFrame frame;
     private static FirstView login;
-    private static UserView user;
+    private static LoggedInView LoggedIn;
     private static CardLayout card;
     private static JPanel viewHolder;
 
@@ -55,9 +61,9 @@ public class MainFrame {
         card = new CardLayout(0, 0);
         viewHolder.setLayout(card);
 
-        user = new UserView();
-        viewHolder.add(user, "user");
-        
+        LoggedIn = new LoggedInView();
+        viewHolder.add(LoggedIn, "userView");
+
         login = new FirstView();
         viewHolder.add(login, "login");
         card.show(viewHolder, "login");
@@ -76,19 +82,21 @@ public class MainFrame {
         frame.setSize(x, y);
 
     }
+
     /**
-     * Shows a users view
+     * Shows This switches over to what a logged in user will see
      */
-    public static void showUserView(){
-        card.show(viewHolder, "user");
-        user.showBookSearch();
+    public static void showUserView() {
+        card.show(viewHolder, "userView");
+        LoggedIn.getUserView().showBookSearch();
     }
-    
+
     /**
-     * Resets all and goes to login
+     * Resets all and goes to login screen
      */
     public static void restartToLogin() {
         login.reset();
+        LoggedIn.reset();
         card.show(viewHolder, "login");
 
     }

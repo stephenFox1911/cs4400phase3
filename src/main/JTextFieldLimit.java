@@ -1,4 +1,5 @@
 package main;
+
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
@@ -6,7 +7,6 @@ import javax.swing.text.PlainDocument;
 @SuppressWarnings("serial")
 public class JTextFieldLimit extends PlainDocument {
     private int limit;
-    private boolean text;
 
     public JTextFieldLimit(int limit) {
         super();
@@ -15,12 +15,12 @@ public class JTextFieldLimit extends PlainDocument {
     }
 
     public void insertString(int offset, String str, AttributeSet attr)
-            throws BadLocationException {
+        throws BadLocationException {
 
         if (str == null)
             return;
         if (str.length() > 1
-                || ((getLength() + str.length()) <= limit && test(str))) {
+            || ((getLength() + str.length()) <= limit && test(str))) {
             super.insertString(offset, str, attr);
 
         }

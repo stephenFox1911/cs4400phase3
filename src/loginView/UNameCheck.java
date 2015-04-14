@@ -1,4 +1,5 @@
 package loginView;
+
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -25,16 +26,16 @@ public class UNameCheck extends JPanel {
         super();
         containedIn = in;
         GridBagLayout gridBagLayout = new GridBagLayout();
-        gridBagLayout.columnWidths = new int[] { 0, 70, 119, 54, 28, 0, 0 };
-        gridBagLayout.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0 };
-        gridBagLayout.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0,
-                0.0, Double.MIN_VALUE };
-        gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                0.0, Double.MIN_VALUE };
+        gridBagLayout.columnWidths = new int[] {0, 70, 119, 54, 28, 0, 0};
+        gridBagLayout.rowHeights = new int[] {0, 0, 0, 0, 0, 0, 0, 0};
+        gridBagLayout.columnWeights = new double[] {0.0, 0.0, 0.0, 0.0, 0.0,
+            0.0, Double.MIN_VALUE};
+        gridBagLayout.rowWeights = new double[] {0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+            0.0, Double.MIN_VALUE};
         setLayout(gridBagLayout);
 
         JLabel lblPleaseEnterA = new JLabel(
-                "Please Enter a username and password.");
+            "Please Enter a username and password.");
         GridBagConstraints gbc_lblPleaseEnterA = new GridBagConstraints();
         gbc_lblPleaseEnterA.gridwidth = 3;
         gbc_lblPleaseEnterA.insets = new Insets(0, 0, 5, 5);
@@ -124,8 +125,8 @@ public class UNameCheck extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 containedIn.showRPage();
                 System.out.println(textUsername.getText() + ", "
-                        + passwordField1.getText() + ", "
-                        + passwordField2.getText());
+                    + passwordField1.getText() + ", "
+                    + passwordField2.getText());
             }
         });
 
