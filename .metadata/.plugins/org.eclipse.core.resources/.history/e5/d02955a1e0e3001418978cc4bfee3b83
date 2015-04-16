@@ -1,0 +1,10 @@
+
+public class testMain {
+	public static void main(String args[]) {
+		
+		System.out.println("Create Driver");
+		DBdriver drive = new DBdriver();
+		System.out.println(drive.sendQuery("SELECT * FROM test"));
+		drive.closeConnection();
+	}
+}

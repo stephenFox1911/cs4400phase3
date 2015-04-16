@@ -1,0 +1,34 @@
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class DBdriver {
+	public static void main(String args[]) {
+		/*
+			Username: cs4400_Group_45
+			Password: _YIlgw6W
+		*/
+
+		System.out.println("Lets Connect!");
+
+		Connection con = null;
+ 		try {
+		 	Class.forName("com.mysql.jdbc.Driver").newInstance();
+			con = DriverManager.getConnection("jdbc:mysql://academicmysql.cc.gatech.edu/cs4400_Group_45",
+			"cs4400_Group_45",
+			"_YIlgw6W");
+
+			if(!con.isClosed()) {
+				System.out.println("Successfully connected to " + "MySQL server using TCP/IP...");
+			}
+
+		} catch(Exception e) {
+		 	System.err.println("Exception: " + e.getMessage() + e);
+		} finally {
+			try {
+			if(con != null)
+				con.close();
+			} catch(SQLException e) {}
+		}
+	}
+}
