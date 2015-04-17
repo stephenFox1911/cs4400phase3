@@ -11,9 +11,12 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.JOptionPane;
 
 import main.MainFrame;
+import DBdriverPack.DBdriver;
 
+import java.sql.*;
 
 @SuppressWarnings("serial")
 public class LoginPage extends JPanel {
@@ -119,10 +122,11 @@ public class LoginPage extends JPanel {
         
         btnLogin.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                System.out.println(passwordField.getText() + "\n"
-                        + userNameField.getText());
-                clearFields();
-                MainFrame.showUserView();
+            	//If user is non-staff
+            	if(checkLogin(userNameField.getText(),passwordField.getText())==1) {
+            		clearFields();
+                    MainFrame.showUserView();
+            	}
             }
         });
 
@@ -132,6 +136,40 @@ public class LoginPage extends JPanel {
         passwordField.setText("");
         
         
+    }
+    
+    /*Checks login info, returns an int based on following:
+     * 0 -> invalid login info
+     * 1 -> valid non-staff user
+     * 2 -> valid staff user
+    */
+    public int checkLogin(String username,String password){
+    	//TODO: Make this correct col number
+    	final int isStaffColNo = 0;
+    	int ret;
+    	DBdriver db = new DBdriver();
+    	//TODO: Put correct query
+    	String query = String.format("SELECT * FROM USER WHERE username=\"%s\" AND password=\"%s\"",username,password);
+    	ResultSet result = db.sendQuery(query);
+    	try {
+			if(result.next()) {
+				if(result.getInt(isStaffColNo)==1) {
+					ret = 2;
+				}
+				else {
+					ret = 1;
+				}
+			}
+			else {
+				JOptionPane.showMessageDialog(this,"Username/password combination is invalid, try again.");
+				ret = 0;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			ret = 0;
+		}
+    	db.closeConnection();
+    	return ret;
     }
     
 
