@@ -4,7 +4,11 @@ import java.awt.CardLayout;
 import javax.swing.JPanel;
 
 import main.MainFrame;
-
+/**
+ * This is the login screen
+ * @author JWJibilian
+ *
+ */
 @SuppressWarnings("serial")
 public class FirstView extends JPanel {
 
@@ -34,7 +38,9 @@ public class FirstView extends JPanel {
         this.showLogin();
 
     }
-
+    /**
+     * Clears all the fields and switchses to login screen
+     */
     public void reset() {
         login.clearFields();
         nameCheck.clearFields();
