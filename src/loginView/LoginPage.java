@@ -12,12 +12,9 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.JOptionPane;
 
 import main.MainFrame;
-import DBdriverPack.DBdriver;
 
-import java.sql.*;
 @SuppressWarnings("serial")
 public class LoginPage extends JPanel {
     private JTextField userNameField;
@@ -30,31 +27,34 @@ public class LoginPage extends JPanel {
     public LoginPage(FirstView in) {
         super();
         containedIn = in;
-        MainFrame.resize(325, 220);
+        //MainFrame.resize(289, 150);
 
         GridBagLayout gridBagLayout = new GridBagLayout();
-        gridBagLayout.columnWidths = new int[] {0, 63, 80, 141, 0};
-        gridBagLayout.rowHeights = new int[] {26, 16, 35, 22, 22, 25, 0};
-        gridBagLayout.columnWeights = new double[] {0.0, 0.0, 0.0, 0.0,
+        
+        
+        gridBagLayout.columnWidths = new int[] {15, 63, 80, 141, 15, 0};
+        gridBagLayout.rowHeights = new int[] {15, 0, 16, 35, 22, 22, 25, 0, 0};
+        gridBagLayout.columnWeights = new double[] {0.0, 0.0, 0.0, 0.0, 0.0,
             Double.MIN_VALUE};
-        gridBagLayout.rowWeights = new double[] {0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+        gridBagLayout.rowWeights = new double[] {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
             Double.MIN_VALUE};
         setLayout(gridBagLayout);
+        
 
         JLabel lblNewLabel_1 = new JLabel("Welcome.");
         GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
         gbc_lblNewLabel_1.anchor = GridBagConstraints.NORTH;
-        gbc_lblNewLabel_1.insets = new Insets(0, 0, 5, 0);
+        gbc_lblNewLabel_1.insets = new Insets(0, 0, 5, 5);
         gbc_lblNewLabel_1.gridwidth = 3;
         gbc_lblNewLabel_1.gridx = 1;
-        gbc_lblNewLabel_1.gridy = 1;
+        gbc_lblNewLabel_1.gridy = 2;
         add(lblNewLabel_1, gbc_lblNewLabel_1);
 
         JLabel label = new JLabel("  ");
         GridBagConstraints gbc_label = new GridBagConstraints();
         gbc_label.insets = new Insets(0, 0, 5, 5);
         gbc_label.gridx = 0;
-        gbc_label.gridy = 2;
+        gbc_label.gridy = 3;
         add(label, gbc_label);
 
         JLabel lblNewLabel = new JLabel("Username:");
@@ -63,17 +63,17 @@ public class LoginPage extends JPanel {
         gbc_lblNewLabel.anchor = GridBagConstraints.WEST;
         gbc_lblNewLabel.insets = new Insets(0, 0, 5, 5);
         gbc_lblNewLabel.gridx = 1;
-        gbc_lblNewLabel.gridy = 3;
+        gbc_lblNewLabel.gridy = 4;
         add(lblNewLabel, gbc_lblNewLabel);
 
         userNameField = new JTextField();
         GridBagConstraints gbc_userNameField = new GridBagConstraints();
         gbc_userNameField.anchor = GridBagConstraints.NORTH;
         gbc_userNameField.fill = GridBagConstraints.HORIZONTAL;
-        gbc_userNameField.insets = new Insets(0, 0, 5, 0);
+        gbc_userNameField.insets = new Insets(0, 0, 5, 5);
         gbc_userNameField.gridwidth = 2;
         gbc_userNameField.gridx = 2;
-        gbc_userNameField.gridy = 3;
+        gbc_userNameField.gridy = 4;
         add(userNameField, gbc_userNameField);
         userNameField.setColumns(10);
 
@@ -83,43 +83,48 @@ public class LoginPage extends JPanel {
         gbc_lblPassword.fill = GridBagConstraints.HORIZONTAL;
         gbc_lblPassword.insets = new Insets(0, 0, 5, 5);
         gbc_lblPassword.gridx = 1;
-        gbc_lblPassword.gridy = 4;
+        gbc_lblPassword.gridy = 5;
         add(lblPassword, gbc_lblPassword);
 
         passwordField = new JPasswordField();
         GridBagConstraints gbc_passwordField = new GridBagConstraints();
         gbc_passwordField.anchor = GridBagConstraints.NORTH;
         gbc_passwordField.fill = GridBagConstraints.HORIZONTAL;
-        gbc_passwordField.insets = new Insets(0, 0, 5, 0);
+        gbc_passwordField.insets = new Insets(0, 0, 5, 5);
         gbc_passwordField.gridwidth = 2;
         gbc_passwordField.gridx = 2;
-        gbc_passwordField.gridy = 4;
+        gbc_passwordField.gridy = 5;
         add(passwordField, gbc_passwordField);
 
         JButton btnRegister = new JButton("Register");
         GridBagConstraints gbc_btnRegister = new GridBagConstraints();
         gbc_btnRegister.anchor = GridBagConstraints.NORTH;
         gbc_btnRegister.fill = GridBagConstraints.HORIZONTAL;
-        gbc_btnRegister.insets = new Insets(0, 0, 0, 5);
+        gbc_btnRegister.insets = new Insets(0, 0, 5, 5);
         gbc_btnRegister.gridwidth = 2;
         gbc_btnRegister.gridx = 1;
-        gbc_btnRegister.gridy = 5;
+        gbc_btnRegister.gridy = 6;
         add(btnRegister, gbc_btnRegister);
 
         JButton btnLogin = new JButton("Login");
         GridBagConstraints gbc_btnLogin = new GridBagConstraints();
+        gbc_btnLogin.insets = new Insets(0, 0, 5, 5);
         gbc_btnLogin.anchor = GridBagConstraints.NORTH;
         gbc_btnLogin.fill = GridBagConstraints.HORIZONTAL;
         gbc_btnLogin.gridx = 3;
-        gbc_btnLogin.gridy = 5;
+        gbc_btnLogin.gridy = 6;
         add(btnLogin, gbc_btnLogin);
+        
+
+        
+        
 
         btnRegister.addActionListener(new ActionListener() {
             /**
              * starts registration process
              */
             public void actionPerformed(ActionEvent e) {
-                
+
                 containedIn.showUNameCheck();
             }
         });
@@ -129,11 +134,13 @@ public class LoginPage extends JPanel {
              * Log the user in with apropriate view
              */
             public void actionPerformed(ActionEvent e) {
-            	//If user is non-staff
-            	if(checkLogin(userNameField.getText(),passwordField.getText())==1) {
-            		clearFields();
-                    MainFrame.showUserView();
-            	}
+                System.out.println(passwordField.getText() + "\n"
+                    + userNameField.getText());
+                MainFrame.showUserView(userNameField.getText());
+                clearFields();
+
+                
+
             }
         });
 
@@ -143,43 +150,6 @@ public class LoginPage extends JPanel {
         userNameField.setText("");
         passwordField.setText("");
 
-    }
-    
-    /*Checks login info, returns an int based on following:
-     * 0 -> invalid login info
-     * 1 -> valid non-staff user
-     * 2 -> valid staff user
-    */
-    public int checkLogin(String username,String password){
-    	//TODO: Make this correct col number
-    	final int isStaffColNo = 1;
-    	int ret = 0;
-    	DBdriver db = new DBdriver();
-    	//TODO: Put correct query
-    	String query = String.format("SELECT * FROM USER WHERE username=\"%s\" AND password=\"%s\"",username,password);
-    	ResultSet result = db.sendQuery(query);
-    	try {
-			if(result.next()) {
-				try {
-					if(result.getInt(isStaffColNo)==1) {
-						ret = 2;
-					}
-					else {
-						ret = 1;
-					}
-				}
-				catch (Exception e) {
-					
-				}
-			}
-			else {
-				JOptionPane.showMessageDialog(this,"Username/password combination is invalid, try again.");
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-    	db.closeConnection();
-    	return ret;
     }
 
 }

@@ -12,13 +12,16 @@ import javax.swing.JTable;
 
 
 
+
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 
 
 
+
 import javax.swing.JLabel;
 import javax.swing.JButton;
+import javax.swing.table.DefaultTableCellRenderer;
 
 import UserView.UserView;
 
@@ -27,14 +30,14 @@ import java.awt.event.ActionEvent;
 
 public class SearchResults extends JPanel {
     private String[] header = {"Select", "ISBN", "Title of Book", "Edition",
-        "Copies Available"};
-    private Object[][] data = new Object[0][5];
+        "Copies Available", "Copies on Reserve"};
+    private Object[][] data = new Object[0][6];
     private JScrollPane scrollPane;
     private JTable searchTable;
     private NewTableModel tableModel;
     private JButton RequestHold;
-    private JButton btnLocationSearch;
     private UserView containedIn;
+    private JButton btnBack;
     
 
     /**
@@ -44,11 +47,11 @@ public class SearchResults extends JPanel {
         containedIn = in;
         
         GridBagLayout gridBagLayout = new GridBagLayout();
-        gridBagLayout.columnWidths = new int[] {117, 527, 53, 107, 55, 0};
-        gridBagLayout.rowHeights = new int[] {20, 196, 53, 10, 0};
+        gridBagLayout.columnWidths = new int[] {5, 527, 53, 107, 0, 0};
+        gridBagLayout.rowHeights = new int[] {20, 196, 53, 0};
         gridBagLayout.columnWeights = new double[] {0.0, 0.0, 0.0, 0.0, 0.0,
             Double.MIN_VALUE};
-        gridBagLayout.rowWeights = new double[] {0.0, 0.0, 0.0, 0.0,
+        gridBagLayout.rowWeights = new double[] {0.0, 0.0, 0.0,
             Double.MIN_VALUE};
         setLayout(gridBagLayout);
 
@@ -75,6 +78,11 @@ public class SearchResults extends JPanel {
         add(lblBookselection, gbc_lblBookselection);
         
         searchTable = new JTable(tableModel);
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment( JLabel.CENTER );
+        for (int x= 0; x<5;x++){
+            searchTable.getColumnModel().getColumn(x+1).setCellRenderer(centerRenderer);
+        }
         searchTable.setFillsViewportHeight(true);
         
         scrollPane = new JScrollPane(searchTable);
@@ -87,17 +95,20 @@ public class SearchResults extends JPanel {
         scrollPane.setViewportView(searchTable);
         add(scrollPane, gbc_scrollPane);
         
-        btnLocationSearch = new JButton("Location Search");
-        GridBagConstraints gbc_btnLocationSearch = new GridBagConstraints();
-        gbc_btnLocationSearch.insets = new Insets(0, 0, 5, 5);
-        gbc_btnLocationSearch.gridx = 2;
-        gbc_btnLocationSearch.gridy = 2;
-        add(btnLocationSearch, gbc_btnLocationSearch);
+        btnBack = new JButton("Back");
+       
+        GridBagConstraints gbc_btnBack = new GridBagConstraints();
+        gbc_btnBack.anchor = GridBagConstraints.EAST;
+        gbc_btnBack.gridwidth = 2;
+        gbc_btnBack.insets = new Insets(0, 0, 0, 5);
+        gbc_btnBack.gridx = 1;
+        gbc_btnBack.gridy = 2;
+        add(btnBack, gbc_btnBack);
         
         RequestHold = new JButton("Request Hold");
         
         GridBagConstraints gbc_RequestHold = new GridBagConstraints();
-        gbc_RequestHold.insets = new Insets(0, 0, 5, 5);
+        gbc_RequestHold.insets = new Insets(0, 0, 0, 5);
         gbc_RequestHold.gridx = 3;
         gbc_RequestHold.gridy = 2;
         add(RequestHold, gbc_RequestHold);
@@ -119,6 +130,12 @@ public class SearchResults extends JPanel {
             }
         });
         
+        btnBack.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                in.showBookSearch();
+            }
+        });
+        
       
 
         // searchTable.setFillsViewportHeight(true);
@@ -131,7 +148,7 @@ public class SearchResults extends JPanel {
      * @param a
      */
     public void updateTable(int a) {
-        Object[][] newData = new Object[a][5];
+        Object[][] newData = new Object[a][6];
         for (int i = 0; i < a; i++) {
 
             newData[i][0] = false;
@@ -139,6 +156,7 @@ public class SearchResults extends JPanel {
             newData[i][2] = "title";
             newData[i][3] = (Integer) i;
             newData[i][4] = (Integer) 2 * i;
+            newData[i][5] = (Integer) (2 * i) % 3;
         }
         
         tableModel.changeData(header, newData);

@@ -12,9 +12,13 @@ import javax.swing.JTable;
 import javax.swing.JScrollPane;
 
 import UserView.UserView;
+
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableCellRenderer;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Holds extends JPanel {
     private JTable table;
@@ -29,6 +33,9 @@ public class Holds extends JPanel {
     private JTextField textHoldRequestDate;
     private JLabel lblEstimatedReturnDate;
     private JTextField textEstReturnDate;
+    private JButton btnBack;
+    private JLabel lblNextAvailable;
+    private JTextField txtNextAvailable;
 
     /**
      * Create the panel.
@@ -36,9 +43,9 @@ public class Holds extends JPanel {
     public Holds(UserView in) {
         containedIn = in;
         GridBagLayout gridBagLayout = new GridBagLayout();
-        gridBagLayout.columnWidths = new int[]{23, 0, 75, 0, 63, 100, 0, 0};
-        gridBagLayout.rowHeights = new int[]{0, 0, 118, 0, 0, 0};
-        gridBagLayout.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+        gridBagLayout.columnWidths = new int[]{15, 0, 92, 0, 92, 100, 5, 0};
+        gridBagLayout.rowHeights = new int[]{15, 0, 118, 0, 15, 0};
+        gridBagLayout.columnWeights = new double[]{0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
         gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
         setLayout(gridBagLayout);
         
@@ -51,7 +58,13 @@ public class Holds extends JPanel {
         gbc_lblPlaceAHold.gridx = 1;
         gbc_lblPlaceAHold.gridy = 1;
         add(lblPlaceAHold, gbc_lblPlaceAHold);
+        
         table = new JTable(tableModel);
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment( JLabel.CENTER );
+        for (int x= 0; x<4;x++){
+            table.getColumnModel().getColumn(x+1).setCellRenderer(centerRenderer);
+        }
         table.setFillsViewportHeight(true);
         scrollPane = new JScrollPane(table);
         GridBagConstraints gbc_scrollPane = new GridBagConstraints();
@@ -75,6 +88,7 @@ public class Holds extends JPanel {
         add(lblHoldRequestDate, gbc_lblHoldRequestDate);
         
         textHoldRequestDate = new JTextField();
+        textHoldRequestDate.setText("MM/DD/YYYY");
         textHoldRequestDate.setEditable(false);
         GridBagConstraints gbc_textHoldRequestDate = new GridBagConstraints();
         gbc_textHoldRequestDate.insets = new Insets(0, 0, 5, 5);
@@ -93,6 +107,7 @@ public class Holds extends JPanel {
         add(lblEstimatedReturnDate, gbc_lblEstimatedReturnDate);
         
         textEstReturnDate = new JTextField();
+        textEstReturnDate.setText("MM/DD/YYYY");
         textEstReturnDate.setEditable(false);
         GridBagConstraints gbc_textEstReturnDate = new GridBagConstraints();
         gbc_textEstReturnDate.insets = new Insets(0, 0, 5, 5);
@@ -104,10 +119,43 @@ public class Holds extends JPanel {
         
         JButton btnPlaceHold = new JButton("Place Hold");
         GridBagConstraints gbc_btnPlaceHold = new GridBagConstraints();
-        gbc_btnPlaceHold.insets = new Insets(0, 0, 0, 5);
+        gbc_btnPlaceHold.insets = new Insets(0, 0, 5, 5);
         gbc_btnPlaceHold.gridx = 5;
-        gbc_btnPlaceHold.gridy = 4;
+        gbc_btnPlaceHold.gridy = 3;
         add(btnPlaceHold, gbc_btnPlaceHold);
+        
+        btnBack = new JButton("Back");
+        btnBack.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                in.showSearchResults();
+            }
+        });
+        
+        lblNextAvailable = new JLabel("Next Available: ");
+        GridBagConstraints gbc_lblNextAvailable = new GridBagConstraints();
+        gbc_lblNextAvailable.anchor = GridBagConstraints.EAST;
+        gbc_lblNextAvailable.insets = new Insets(0, 0, 0, 5);
+        gbc_lblNextAvailable.gridx = 1;
+        gbc_lblNextAvailable.gridy = 4;
+        add(lblNextAvailable, gbc_lblNextAvailable);
+        
+        txtNextAvailable = new JTextField();
+        txtNextAvailable.setText("MM/DD/YYYY");
+        GridBagConstraints gbc_txtNextAvailable = new GridBagConstraints();
+        gbc_txtNextAvailable.insets = new Insets(0, 0, 0, 5);
+        gbc_txtNextAvailable.fill = GridBagConstraints.HORIZONTAL;
+        gbc_txtNextAvailable.gridx = 2;
+        gbc_txtNextAvailable.gridy = 4;
+        add(txtNextAvailable, gbc_txtNextAvailable);
+        txtNextAvailable.setColumns(10);
+        GridBagConstraints gbc_btnBack = new GridBagConstraints();
+        gbc_btnBack.fill = GridBagConstraints.HORIZONTAL;
+        gbc_btnBack.insets = new Insets(0, 0, 0, 5);
+        gbc_btnBack.gridx = 5;
+        gbc_btnBack.gridy = 4;
+        add(btnBack, gbc_btnBack);
+        
+        
 
     }
     
