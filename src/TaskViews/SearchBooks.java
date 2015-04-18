@@ -161,7 +161,6 @@ public class SearchBooks extends JPanel {
         gbc_btnClose.gridy = 7;
         add(btnClose, gbc_btnClose);
         
-
     }
 
 }

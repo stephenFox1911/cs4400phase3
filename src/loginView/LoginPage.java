@@ -145,28 +145,31 @@ public class LoginPage extends JPanel {
     */
     public int checkLogin(String username,String password){
     	//TODO: Make this correct col number
-    	final int isStaffColNo = 0;
-    	int ret;
+    	final int isStaffColNo = 1;
+    	int ret = 0;
     	DBdriver db = new DBdriver();
     	//TODO: Put correct query
     	String query = String.format("SELECT * FROM USER WHERE username=\"%s\" AND password=\"%s\"",username,password);
     	ResultSet result = db.sendQuery(query);
     	try {
 			if(result.next()) {
-				if(result.getInt(isStaffColNo)==1) {
-					ret = 2;
+				try {
+					if(result.getInt(isStaffColNo)==1) {
+						ret = 2;
+					}
+					else {
+						ret = 1;
+					}
 				}
-				else {
-					ret = 1;
+				catch (Exception e) {
+					
 				}
 			}
 			else {
 				JOptionPane.showMessageDialog(this,"Username/password combination is invalid, try again.");
-				ret = 0;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			ret = 0;
 		}
     	db.closeConnection();
     	return ret;
