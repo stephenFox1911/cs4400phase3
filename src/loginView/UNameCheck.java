@@ -1,4 +1,5 @@
 package loginView;
+
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -7,14 +8,9 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-
-import DBdriverPack.DBdriver;
-
-import java.sql.*;
 
 @SuppressWarnings("serial")
 public class UNameCheck extends JPanel {
@@ -30,16 +26,16 @@ public class UNameCheck extends JPanel {
         super();
         containedIn = in;
         GridBagLayout gridBagLayout = new GridBagLayout();
-        gridBagLayout.columnWidths = new int[] { 0, 70, 119, 54, 28, 0, 0 };
-        gridBagLayout.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0 };
-        gridBagLayout.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0,
-                0.0, Double.MIN_VALUE };
-        gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                0.0, Double.MIN_VALUE };
+        gridBagLayout.columnWidths = new int[] {0, 70, 119, 54, 28, 0, 0};
+        gridBagLayout.rowHeights = new int[] {0, 0, 0, 0, 0, 0, 0, 0};
+        gridBagLayout.columnWeights = new double[] {0.0, 0.0, 0.0, 0.0, 0.0,
+            0.0, Double.MIN_VALUE};
+        gridBagLayout.rowWeights = new double[] {0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+            0.0, Double.MIN_VALUE};
         setLayout(gridBagLayout);
 
         JLabel lblPleaseEnterA = new JLabel(
-                "Please Enter a username and password.");
+            "Please Enter a username and password.");
         GridBagConstraints gbc_lblPleaseEnterA = new GridBagConstraints();
         gbc_lblPleaseEnterA.gridwidth = 3;
         gbc_lblPleaseEnterA.insets = new Insets(0, 0, 5, 5);
@@ -127,59 +123,15 @@ public class UNameCheck extends JPanel {
              * Shows the registration page
              */
             public void actionPerformed(ActionEvent e) {
-            	if(credentialsValid(textUsername.getText(),passwordField1.getText(),passwordField2.getText())) {
-            		//createUser(textUsername.getText(),passwordField1.getText());
-            		containedIn.showRPage();
-            	}
+                containedIn.showRPage();
+                System.out.println(textUsername.getText() + ", "
+                    + passwordField1.getText() + ", "
+                    + passwordField2.getText());
             }
         });
 
     }
-   
-    public boolean credentialsValid(String username,String pass1,String pass2) {
-    	boolean usernameValid = false;
-    	boolean passwordValid = false;
-    	String errMsg = "";
-    	DBdriver db = new DBdriver();
-    	//Check if any fields are empty
-    	if (username.equals("")||pass1.equals("")||pass2.equals("")) {
-    		errMsg += "One or more fields was left blank.";
-    	}
-    	//If all fields are non-empty, check validity based on other requirements
-    	else {
-	    	//Check if username is taken
-    		//TODO: Replace test query
-	    	String query = String.format("SELECT username FROM USER WHERE username=\"%s\"",username);
-	    	ResultSet result = db.sendQuery(query);
-	    	try {
-				if (!result.next()) {
-					usernameValid = true;
-				}
-				else {
-					errMsg += "Username already in use.\n";
-				}
-			} catch (SQLException e) {	
-				e.printStackTrace();
-			}
-	    	db.closeConnection();
-	    	if (pass1.equals(pass2)) {
-				passwordValid = true;
-			}
-	    	else {
-	    		errMsg += "The password fields do not match.";
-	    	}
-    	}
-    	JOptionPane.showMessageDialog(this,errMsg);
-    	return usernameValid && passwordValid;
-    }
-    
-    public void createUser(String username,String password) {
-    	DBdriver db = new DBdriver();
-    	//TODO: put appropriate query here
-    	db.sendQuery(String.format("INSERT INTO USER VALUES (username=\"%s\",password=\"%s\")",username,password));
-    	db.closeConnection();
-    }
-    
+
     public void clearFields() {
         textUsername.setText("");
         passwordField2.setText("");

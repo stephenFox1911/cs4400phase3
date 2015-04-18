@@ -17,7 +17,6 @@ import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
@@ -25,7 +24,6 @@ import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 
 import main.JTextFieldLimit;
-import DBdriverPack.DBdriver;
 
 /**
  * This is the panel where a user can enter all information to register.
@@ -415,28 +413,6 @@ public class RegistrationPage extends JPanel {
              * Event where the select button is pressed.
              */
             public void actionPerformed(ActionEvent arg0) {
-            	
-            	if(validInfo(textFirstName.getText(),
-                        textLastName.getText(),
-                        rdbtnMale.isSelected(),rdbtnFemale.isSelected(),
-                        chckbxFaculty.isSelected(),
-                        departmentsList.getSelectedItem(),
-                        textMonth.getText(),textDay.getText(),
-                        textYear.getText(),textEmail.getText(),
-                        textStreet.getText(),textCity.getText(),
-                        textState.getText(),textZIP.getText())) {
-            		
-            		registerUser(textFirstName.getText(),
-                            textLastName.getText(),
-                            rdbtnMale.isSelected(),
-                            chckbxFaculty.isSelected(),
-                            departmentsList.getSelectedItem(),
-                            textMonth.getText(),textDay.getText(),
-                            textYear.getText(),textEmail.getText(),
-                            textStreet.getText(),textCity.getText(),
-                            textState.getText(),textZIP.getText());
-            	}
-            	
                 String print = textFirstName.getText() + ", "
                     + textLastName.getText() + ", " + rdbtnMale.isSelected()
                     + ", " + chckbxFaculty.isSelected() + ", "
@@ -451,33 +427,6 @@ public class RegistrationPage extends JPanel {
         });
     }
 
-    public boolean validInfo(String fname,String lname,boolean isMale,boolean isFemale,
-    		boolean isFaculty,String dep,String m,String d,String y,String email,
-    		String st,String city,String state,String zip) {
-    	String errMsg = "";
-    	//Check for empty fields
-    	if (fname.equals("")||lname.equals("")||!(isMale||isFemale)||(isFaculty&&dep.equals(""))
-    			||m.equals("")||d.equals("")||y.equals("")||email.equals("")
-    			||st.equals("")||city.equals("")||state.equals("")||zip.equals("")) {
-    		JOptionPane.showMessageDialog(this,"One or more fields was left blank.");
-    		return false;
-    	}
-    	else {
-    		//TODO:Should we check validity of date/email/etc here?
-    		registerUser(fname,lname,isMale,isFaculty,dep,m,d,y,email,st,city,state,zip);
-    	}
-    	return true;
-    }
-    
-    public void registerUser(String fname,String lname,boolean isMale,
-    		boolean isFaculty,String dep,String m,String d,String y,String email,
-    		String st,String city,String state,String zip) {
-    	DBdriver db = new DBdriver();
-    	//TODO: apprpriate query
-    	db.sendQuery(String.format("query here","stuff"));
-    	db.closeConnection();
-    }
-    
     /**
      * Hides or shows department list and its label. True will show them, false
      * will hide.
