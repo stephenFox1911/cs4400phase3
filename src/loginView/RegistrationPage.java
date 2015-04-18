@@ -27,6 +27,12 @@ import javax.swing.border.TitledBorder;
 import main.JTextFieldLimit;
 import DBdriverPack.DBdriver;
 
+/**
+ * This is the panel where a user can enter all information to register.
+ * 
+ * @author JWJibilian
+ *
+ */
 @SuppressWarnings("serial")
 public class RegistrationPage extends JPanel {
 
@@ -56,7 +62,7 @@ public class RegistrationPage extends JPanel {
     private Choice departmentsList;
     GridBagLayout gridBagLayout;
     private GridBagConstraints gbc_departmentsList;
-    private final String[] departments = { "", "Dep_1", "Dep_2", "Dep_3" };
+    private final String[] departments = {"", "Dep_1", "Dep_2", "Dep_3"};
     private JLabel lblSelDep;
     private JPanel panel;
 
@@ -67,14 +73,14 @@ public class RegistrationPage extends JPanel {
         super();
         containedIn = in;
         gridBagLayout = new GridBagLayout();
-        gridBagLayout.columnWidths = new int[] { 10, 0, 30, -1, 30, 1, 75, 46, 45, 31, 37,
-                33, 0 };
-        gridBagLayout.rowHeights = new int[] { 10, 16, 0, 0, 0, 11, 0, 0, 0, 0,
-                0 };
-        gridBagLayout.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
-        gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+        gridBagLayout.columnWidths = new int[] {10, 0, 30, -1, 30, 1, 75, 46,
+            45, 31, 37, 33, 0};
+        gridBagLayout.rowHeights = new int[] {10, 16, 0, 0, 0, 11, 0, 0, 0, 0,
+            0};
+        gridBagLayout.columnWeights = new double[] {0.0, 0.0, 0.0, 0.0, 0.0,
+            0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+        gridBagLayout.rowWeights = new double[] {0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+            0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
         setLayout(gridBagLayout);
 
         JLabel lblFirstName = new JLabel("First Name:");
@@ -98,9 +104,8 @@ public class RegistrationPage extends JPanel {
 
         panel = new JPanel();
         panel.setBorder(new TitledBorder(UIManager
-                .getBorder("TitledBorder.border"), "Gender",
-                TitledBorder.LEADING, TitledBorder.TOP, null,
-                new Color(0, 0, 0)));
+            .getBorder("TitledBorder.border"), "Gender", TitledBorder.LEADING,
+            TitledBorder.TOP, null, new Color(0, 0, 0)));
         GridBagConstraints gbc_panel = new GridBagConstraints();
         gbc_panel.fill = GridBagConstraints.BOTH;
         gbc_panel.gridheight = 2;
@@ -110,11 +115,10 @@ public class RegistrationPage extends JPanel {
         gbc_panel.gridy = 1;
         add(panel, gbc_panel);
         GridBagLayout gbl_panel = new GridBagLayout();
-        gbl_panel.columnWidths = new int[] { 46, 45, 33, 0 };
-        gbl_panel.rowHeights = new int[] { 16, 0 };
-        gbl_panel.columnWeights = new double[] { 0.0, 0.0, 0.0,
-                Double.MIN_VALUE };
-        gbl_panel.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
+        gbl_panel.columnWidths = new int[] {46, 45, 33, 0};
+        gbl_panel.rowHeights = new int[] {16, 0};
+        gbl_panel.columnWeights = new double[] {0.0, 0.0, 0.0, Double.MIN_VALUE};
+        gbl_panel.rowWeights = new double[] {0.0, Double.MIN_VALUE};
         panel.setLayout(gbl_panel);
 
         radioGroup = new ButtonGroup();
@@ -303,15 +307,15 @@ public class RegistrationPage extends JPanel {
         gbc_lblState.gridx = 8;
         gbc_lblState.gridy = 7;
         add(lblState, gbc_lblState);
-        
-                textState = new JTextField();
-                GridBagConstraints gbc_textState = new GridBagConstraints();
-                gbc_textState.fill = GridBagConstraints.BOTH;
-                gbc_textState.insets = new Insets(0, 0, 5, 5);
-                gbc_textState.gridx = 9;
-                gbc_textState.gridy = 7;
-                add(textState, gbc_textState);
-                textState.setColumns(2);
+
+        textState = new JTextField();
+        GridBagConstraints gbc_textState = new GridBagConstraints();
+        gbc_textState.fill = GridBagConstraints.BOTH;
+        gbc_textState.insets = new Insets(0, 0, 5, 5);
+        gbc_textState.gridx = 9;
+        gbc_textState.gridy = 7;
+        add(textState, gbc_textState);
+        textState.setColumns(2);
 
         lblZIP = new JLabel("ZIP:");
         GridBagConstraints gbc_lblZIP = new GridBagConstraints();
@@ -434,15 +438,13 @@ public class RegistrationPage extends JPanel {
             	}
             	
                 String print = textFirstName.getText() + ", "
-                        + textLastName.getText() + ", "
-                        + rdbtnMale.isSelected() + ", "
-                        + chckbxFaculty.isSelected() + ", "
-                        + departmentsList.getSelectedItem() + ", "
-                        + textMonth.getText() + ", " + textDay.getText() + ", "
-                        + textYear.getText() +", " + textEmail.getText() + ", "
-                        + textStreet.getText() + ", " + textCity.getText()
-                        + ", " + textState.getText() + ", " + textZIP.getText()
-                        + ".";
+                    + textLastName.getText() + ", " + rdbtnMale.isSelected()
+                    + ", " + chckbxFaculty.isSelected() + ", "
+                    + departmentsList.getSelectedItem() + ", "
+                    + textMonth.getText() + ", " + textDay.getText() + ", "
+                    + textYear.getText() + ", " + textEmail.getText() + ", "
+                    + textStreet.getText() + ", " + textCity.getText() + ", "
+                    + textState.getText() + ", " + textZIP.getText() + ".";
                 System.out.println(print);
                 containedIn.reset();
             }
@@ -491,6 +493,9 @@ public class RegistrationPage extends JPanel {
 
     }
 
+    /**
+     * Clears all the fields of the registration page
+     */
     public void clearFields() {
         textFirstName.setText("");
         textLastName.setText("");

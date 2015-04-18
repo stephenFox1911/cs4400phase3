@@ -1,4 +1,5 @@
 package loginView;
+
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -17,13 +18,11 @@ import main.MainFrame;
 import DBdriverPack.DBdriver;
 
 import java.sql.*;
-
 @SuppressWarnings("serial")
 public class LoginPage extends JPanel {
     private JTextField userNameField;
     private JPasswordField passwordField;
     private FirstView containedIn;
-
 
     /**
      * Create the panel.
@@ -31,15 +30,17 @@ public class LoginPage extends JPanel {
     public LoginPage(FirstView in) {
         super();
         containedIn = in;
-        MainFrame.resize(325,220);
-        
+        MainFrame.resize(325, 220);
+
         GridBagLayout gridBagLayout = new GridBagLayout();
-        gridBagLayout.columnWidths = new int[]{0, 63, 80, 141, 0};
-        gridBagLayout.rowHeights = new int[]{26, 16, 35, 22, 22, 25, 0};
-        gridBagLayout.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-        gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+        gridBagLayout.columnWidths = new int[] {0, 63, 80, 141, 0};
+        gridBagLayout.rowHeights = new int[] {26, 16, 35, 22, 22, 25, 0};
+        gridBagLayout.columnWeights = new double[] {0.0, 0.0, 0.0, 0.0,
+            Double.MIN_VALUE};
+        gridBagLayout.rowWeights = new double[] {0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+            Double.MIN_VALUE};
         setLayout(gridBagLayout);
-        
+
         JLabel lblNewLabel_1 = new JLabel("Welcome.");
         GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
         gbc_lblNewLabel_1.anchor = GridBagConstraints.NORTH;
@@ -48,14 +49,14 @@ public class LoginPage extends JPanel {
         gbc_lblNewLabel_1.gridx = 1;
         gbc_lblNewLabel_1.gridy = 1;
         add(lblNewLabel_1, gbc_lblNewLabel_1);
-        
+
         JLabel label = new JLabel("  ");
         GridBagConstraints gbc_label = new GridBagConstraints();
         gbc_label.insets = new Insets(0, 0, 5, 5);
         gbc_label.gridx = 0;
         gbc_label.gridy = 2;
         add(label, gbc_label);
-        
+
         JLabel lblNewLabel = new JLabel("Username:");
         lblNewLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
@@ -64,7 +65,7 @@ public class LoginPage extends JPanel {
         gbc_lblNewLabel.gridx = 1;
         gbc_lblNewLabel.gridy = 3;
         add(lblNewLabel, gbc_lblNewLabel);
-        
+
         userNameField = new JTextField();
         GridBagConstraints gbc_userNameField = new GridBagConstraints();
         gbc_userNameField.anchor = GridBagConstraints.NORTH;
@@ -75,7 +76,7 @@ public class LoginPage extends JPanel {
         gbc_userNameField.gridy = 3;
         add(userNameField, gbc_userNameField);
         userNameField.setColumns(10);
-        
+
         JLabel lblPassword = new JLabel("Password:");
         lblPassword.setHorizontalAlignment(SwingConstants.RIGHT);
         GridBagConstraints gbc_lblPassword = new GridBagConstraints();
@@ -84,7 +85,7 @@ public class LoginPage extends JPanel {
         gbc_lblPassword.gridx = 1;
         gbc_lblPassword.gridy = 4;
         add(lblPassword, gbc_lblPassword);
-        
+
         passwordField = new JPasswordField();
         GridBagConstraints gbc_passwordField = new GridBagConstraints();
         gbc_passwordField.anchor = GridBagConstraints.NORTH;
@@ -94,8 +95,8 @@ public class LoginPage extends JPanel {
         gbc_passwordField.gridx = 2;
         gbc_passwordField.gridy = 4;
         add(passwordField, gbc_passwordField);
-        
-        JButton btnRegister = new JButton("Register");        
+
+        JButton btnRegister = new JButton("Register");
         GridBagConstraints gbc_btnRegister = new GridBagConstraints();
         gbc_btnRegister.anchor = GridBagConstraints.NORTH;
         gbc_btnRegister.fill = GridBagConstraints.HORIZONTAL;
@@ -104,7 +105,7 @@ public class LoginPage extends JPanel {
         gbc_btnRegister.gridx = 1;
         gbc_btnRegister.gridy = 5;
         add(btnRegister, gbc_btnRegister);
-        
+
         JButton btnLogin = new JButton("Login");
         GridBagConstraints gbc_btnLogin = new GridBagConstraints();
         gbc_btnLogin.anchor = GridBagConstraints.NORTH;
@@ -112,15 +113,21 @@ public class LoginPage extends JPanel {
         gbc_btnLogin.gridx = 3;
         gbc_btnLogin.gridy = 5;
         add(btnLogin, gbc_btnLogin);
-        
+
         btnRegister.addActionListener(new ActionListener() {
+            /**
+             * starts registration process
+             */
             public void actionPerformed(ActionEvent e) {
+                
                 containedIn.showUNameCheck();
             }
         });
-        
-        
+
         btnLogin.addActionListener(new ActionListener() {
+            /**
+             * Log the user in with apropriate view
+             */
             public void actionPerformed(ActionEvent e) {
             	//If user is non-staff
             	if(checkLogin(userNameField.getText(),passwordField.getText())==1) {
@@ -131,11 +138,11 @@ public class LoginPage extends JPanel {
         });
 
     }
-    public void clearFields(){
+
+    public void clearFields() {
         userNameField.setText("");
         passwordField.setText("");
-        
-        
+
     }
     
     /*Checks login info, returns an int based on following:
@@ -174,6 +181,5 @@ public class LoginPage extends JPanel {
     	db.closeConnection();
     	return ret;
     }
-    
 
 }
