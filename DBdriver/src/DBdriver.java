@@ -56,5 +56,17 @@ public class DBdriver {
 		}
 		return results;
 	}
+	
+	public ResultSet sendUpdate(String query) {
+		ResultSet results;
+		try{
+			Statement st = con.createStatement();
+			results = st.executeUpdate(query);
+		} catch(Exception e) {
+			System.err.println("Exception while executing Query: " + e.getMessage());
+			results = null;
+		}
+		return results;
+	}
 
 }
