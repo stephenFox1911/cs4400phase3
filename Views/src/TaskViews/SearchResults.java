@@ -30,7 +30,7 @@ import java.awt.event.ActionEvent;
 
 public class SearchResults extends JPanel {
     private String[] header = {"Select", "ISBN", "Title of Book", "Edition",
-        "Copies Available", "Copies on Reserve"};
+        "Copies Available", "On Reserve"};
     private Object[][] data = new Object[0][6];
     private JScrollPane scrollPane;
     private JTable searchTable;
@@ -54,18 +54,6 @@ public class SearchResults extends JPanel {
         gridBagLayout.rowWeights = new double[] {0.0, 0.0, 0.0,
             Double.MIN_VALUE};
         setLayout(gridBagLayout);
-
-        // Object[][] data = new Object[5][5];
-        // for (int i = 0; i < 5; i++) {
-        // data[i][0] = new Boolean(false);
-        // data[i][1] = "SomeISSN String";
-        // data[i][2] = "title";
-        // data[i][3] = (Integer) i;
-        // data[i][4] = (Integer) 2 * i;
-        // }
-        //
-
-        // searchTable.setFillsViewportHeight(true);
 
         tableModel = new NewTableModel(header, data);
         
@@ -117,11 +105,12 @@ public class SearchResults extends JPanel {
             public void actionPerformed(ActionEvent arg0) {
                 try{
                     Object[] selected = tableModel.getSelected();
-                    for(Object x : selected){
-                        System.out.print(x + " ");
-                    }
                     // if there is no copy available, switch to future hold screen
-                    containedIn.showHoldScreen(selected);
+                    if(selected[5].equals("No")) {
+                    	containedIn.showHoldScreen(selected);
+                    } else {
+                    	JOptionPane.showMessageDialog(null, "Book is on Reserve");
+                    }
                 } catch (NothingSelectedException e){
                     
                     JOptionPane.showMessageDialog(null, e.getMessage(), "Book not selected" , JOptionPane.INFORMATION_MESSAGE);
@@ -148,22 +137,8 @@ public class SearchResults extends JPanel {
      * @param a
      */
     public void updateTable(Object[][] results) {
-        /*
-    	Object[][] newData = new Object[a][6];
-        for (int i = 0; i < a; i++) {
-
-            newData[i][0] = false;
-            newData[i][1] = "Some ISBN String";
-            newData[i][2] = "title";
-            newData[i][3] = (Integer) i;
-            newData[i][4] = (Integer) 2 * i;
-            newData[i][5] = (Integer) (2 * i) % 3;
-        }
-        */
-        
+       
         tableModel.changeData(header, results);
-
-        // searchTable = new JTable(data, header);
 
     }
 }

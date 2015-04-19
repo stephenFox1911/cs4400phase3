@@ -11,6 +11,7 @@ import javax.swing.JLabel;
 
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.awt.LayoutManager;
 
 import javax.swing.JComboBox;
 import javax.swing.JButton;
@@ -29,7 +30,11 @@ public class DamagedBooksReport extends JPanel {
 	UserView containedIn;
 	private NewTableModel model;
 	private JTable table;
-	private String[] header = { "Month", "Subject", "#damaged Books" };;
+	JComboBox<String> comboSubject1;
+	JComboBox<String> comboSubject2;
+	JComboBox<String> comboSubject3;
+	private String[] header = { "Month", "Subject", "#damaged Books" };
+	private String[] subjects = {};
 
 	/**
 	 * Create the panel.
@@ -66,29 +71,6 @@ public class DamagedBooksReport extends JPanel {
 		String[] months = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul",
 				"Aug", "Sep", "Oct", "Nov", "Dec" };
 
-		DBdriver db = new DBdriver();
-		
-		ResultSet subjects = db.sendQuery("SELECT name FROM SUBJECT;");
-
-		ArrayList<String> subString = new ArrayList<String>();
-		subString.add("");
-		try {
-			
-			while (subjects.next()) {
-				subString.add(subjects.getString(1));
-
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		
-
-		db.closeConnection();
-		
-		String[] foundSubjects = new String[0];
-		
-		foundSubjects = subString.toArray(foundSubjects);
 
 		JComboBox comboMonth = new JComboBox(months);
 		GridBagConstraints gbc_comboMonth = new GridBagConstraints();
@@ -106,7 +88,7 @@ public class DamagedBooksReport extends JPanel {
 		gbc_lblSubject1.gridy = 2;
 		add(lblSubject1, gbc_lblSubject1);
 
-		JComboBox<String> comboSubject1 = new JComboBox<String>(foundSubjects);
+		comboSubject1 = new JComboBox<String>(subjects);
 		GridBagConstraints gbc_comboSubject1 = new GridBagConstraints();
 		gbc_comboSubject1.insets = new Insets(0, 0, 5, 5);
 		gbc_comboSubject1.fill = GridBagConstraints.HORIZONTAL;
@@ -122,7 +104,7 @@ public class DamagedBooksReport extends JPanel {
 		gbc_lblSubject.gridy = 3;
 		add(lblSubject, gbc_lblSubject);
 
-		JComboBox<String> comboSubject2 = new JComboBox<String>(foundSubjects);
+		comboSubject2 = new JComboBox<String>(subjects);
 		GridBagConstraints gbc_comboSubject2 = new GridBagConstraints();
 		gbc_comboSubject2.insets = new Insets(0, 0, 5, 5);
 		gbc_comboSubject2.fill = GridBagConstraints.HORIZONTAL;
@@ -138,7 +120,7 @@ public class DamagedBooksReport extends JPanel {
 		gbc_lblSubject_1.gridy = 4;
 		add(lblSubject_1, gbc_lblSubject_1);
 
-		JComboBox<String> comboSubject3 = new JComboBox<String>(foundSubjects);
+		comboSubject3 = new JComboBox<String>(subjects);
 		GridBagConstraints gbc_comboSubject3 = new GridBagConstraints();
 		gbc_comboSubject3.insets = new Insets(0, 0, 5, 5);
 		gbc_comboSubject3.fill = GridBagConstraints.HORIZONTAL;
@@ -186,6 +168,18 @@ public class DamagedBooksReport extends JPanel {
 
 	public void updateTable(Object[][] newData) {
 		model.changeData(header, newData);
+	}
+
+	public void setSubjects(String[] subjects) {
+		comboSubject1.removeAllItems();
+		comboSubject2.removeAllItems();
+		comboSubject3.removeAllItems();
+	
+		for (String x : subjects) {
+			comboSubject1.addItem(x);
+			comboSubject2.addItem(x);
+			comboSubject3.addItem(x);
+		}
 	}
 
 }

@@ -193,7 +193,7 @@ public class SearchBooks extends JPanel {
     public void search(String searchType, String searchValue) {
     	DBdriver db = new DBdriver();
     	ResultSet rs;
-    	String query = "SELECT BOOK.title, BOOK.isbn, BOOK.edition, copy_count "
+    	String query = "SELECT BOOK.title, BOOK.isbn, BOOK.edition, BOOK.on_reserve, copy_count "
 		+ "FROM BOOK "
 		+ "INNER JOIN "
 		+ "(SELECT COPY.book_isbn AS book_isbn, COUNT(DISTINCT COPY.copy_number) "
@@ -208,7 +208,6 @@ public class SearchBooks extends JPanel {
     		JOptionPane.showMessageDialog(this,"Please enter a search value");
     	} else {
     		query += searchType+"=\'"+searchValue+"\'";
-    		//System.out.println("Actual Query: " +query);
     		rs = db.sendQuery(query);
     		try {
     			ArrayList resValues = new ArrayList();
@@ -218,11 +217,17 @@ public class SearchBooks extends JPanel {
     				resValues.add(rs.getString("isbn"));
     				resValues.add(rs.getString("edition"));
     				resValues.add(rs.getString("copy_count"));
+    				if(rs.getInt("on_reserve") == 1) {
+    					resValues.add("Yes");
+    				} else {
+    					resValues.add("No");
+    				}
     			}
     			Object[][] resArray = new Object[resValues.size()/5][6];
     			
-    			for(int i=0; i<resValues.size()-1; i++){
-    				resArray[i/5][i%5] = resValues.get(i);
+    			for(int i=0; i<resValues.size(); i++){
+    				System.out.println(resValues.get(i));
+    				resArray[i/6][i%6] = resValues.get(i);
     			}
     			containedIn.showSearchResults(resArray);
     		} catch(SQLException e){

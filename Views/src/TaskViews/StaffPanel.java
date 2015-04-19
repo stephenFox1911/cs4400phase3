@@ -16,6 +16,7 @@ import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 
 
 public class StaffPanel extends JPanel {
@@ -114,8 +115,33 @@ public class StaffPanel extends JPanel {
         });
         
         btnDamagedBooksReport.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-            	containedIn.showDamageReport();
+            public void actionPerformed(ActionEvent ae) {
+            	
+        		DBdriver db = new DBdriver();
+        		
+        		ResultSet subjects = db.sendQuery("SELECT name FROM SUBJECT;");
+
+        		ArrayList<String> subString = new ArrayList<String>();
+        		subString.add("");
+        		try {
+        			
+        			while (subjects.next()) {
+        				subString.add(subjects.getString(1));
+
+        			}
+        		} catch (Exception e) {
+        			e.printStackTrace();
+        		}
+        		
+        		
+
+        		db.closeConnection();
+        		
+        		String[] foundSubjects = new String[0];
+        		
+        		foundSubjects = subString.toArray(foundSubjects);
+        		
+            	containedIn.showDamageReport(foundSubjects);
             }
         });
         
