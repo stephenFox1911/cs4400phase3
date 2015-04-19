@@ -26,8 +26,10 @@ import java.awt.FlowLayout;
 import javax.swing.SwingConstants;
 import java.awt.GridLayout;
 import java.awt.CardLayout;
+import java.awt.List;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class SearchBooks extends JPanel {
     private UserView containedIn;
@@ -133,7 +135,7 @@ public class SearchBooks extends JPanel {
         
         btnSearch.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                //containedIn.showSearchResults(Integer.parseInt(textFieldISBN.getText()));
+                
             	String searchValue;
             	String searchType;
                 if(!textFieldISBN.getText().equals("")) {
@@ -209,13 +211,24 @@ public class SearchBooks extends JPanel {
     		//System.out.println("Actual Query: " +query);
     		rs = db.sendQuery(query);
     		try {
+    			ArrayList resValues = new ArrayList();
     			while(rs.next()){
-    				System.out.println(rs.getString("title"));
-    				System.out.println(rs.getInt("copy_count"));
+    				resValues.add(new Boolean(false));
+    				resValues.add(rs.getString("title"));
+    				resValues.add(rs.getString("isbn"));
+    				resValues.add(rs.getString("edition"));
+    				resValues.add(rs.getString("copy_count"));
     			}
+    			Object[][] resArray = new Object[resValues.size()/5][6];
+    			
+    			for(int i=0; i<resValues.size()-1; i++){
+    				resArray[i/5][i%5] = resValues.get(i);
+    			}
+    			containedIn.showSearchResults(resArray);
     		} catch(SQLException e){
     			System.out.println(e.getMessage());
     		}
+    		
     	}
     	db.closeConnection();    	
     }
