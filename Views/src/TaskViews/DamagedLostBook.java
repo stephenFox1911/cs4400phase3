@@ -153,7 +153,7 @@ public class DamagedLostBook extends JPanel {
         
         btnLookForLastUser.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	penaltyUsername = getPreviousUser(textISBN.getText(),"temp");
+            	penaltyUsername = getPreviousUser(textISBN.getText(),"2");
             }
         });
         
