@@ -226,7 +226,6 @@ public class SearchBooks extends JPanel {
     			Object[][] resArray = new Object[resValues.size()/5][6];
     			
     			for(int i=0; i<resValues.size(); i++){
-    				System.out.println(resValues.get(i));
     				resArray[i/6][i%6] = resValues.get(i);
     			}
     			containedIn.showSearchResults(resArray);

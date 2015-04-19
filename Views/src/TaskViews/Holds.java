@@ -3,6 +3,7 @@ package TaskViews;
 import javax.swing.JPanel;
 
 import main.NewTableModel;
+import main.NothingSelectedException;
 
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
@@ -15,6 +16,7 @@ import UserView.UserView;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.event.ActionListener;
@@ -155,8 +157,20 @@ public class Holds extends JPanel {
         gbc_btnBack.gridy = 4;
         add(btnBack, gbc_btnBack);
         
-        
-
+        btnPlaceHold.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	//containedIn.showSearchResults();
+            	
+            	System.out.println("Request the hold");
+            	try {
+					requestHold(tableModel.getSelected());
+					
+				} catch (NothingSelectedException e1) {
+					JOptionPane.showMessageDialog(null, "Please select a book.");
+				}
+            
+            }
+        });
     }
     
     public void setData(Object[] info){
@@ -165,4 +179,11 @@ public class Holds extends JPanel {
         tableModel.changeData(header, data);
     }
 
+    public void requestHold(Object[] selected) {
+    	System.out.println(selected[1]);
+    	System.out.println(selected[2]);
+    	System.out.println(selected[3]);
+    	System.out.println(selected[4]);
+    	System.out.println(selected[5]);
+    }
 }
