@@ -101,8 +101,7 @@ public class MainFrame {
      */
     public static void showUserView(String username,String password,String type) {
         card.show(viewHolder, "userView");
-        LoggedIn.userUN = username;
-        LoggedIn.userPW = password;
+        LoggedIn.setCurentUser(username);
         LoggedIn.getUserView().setAndShowType(type);
     }
 

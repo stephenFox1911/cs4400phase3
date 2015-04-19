@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 import main.MainFrame;
 import TaskViews.*;
 
+
 public class UserView extends JPanel {
     private CardLayout layout;
     private SearchBooks bookSearch;
@@ -23,6 +24,10 @@ public class UserView extends JPanel {
     private OtherReports popularBooks;
     private OtherReports frequentUser;
     private OtherReports popularSubject;
+    
+    private String userUN;
+    private String userPW;
+
 
     /**
      * Create the panel.
@@ -176,4 +181,13 @@ public class UserView extends JPanel {
         layout.show(this, "popularSubject");
         MainFrame.resize(509, 258);
     }
+
+	public void setCurrentUser(String username) {
+		userUN = username;
+		
+	}
+	
+	public String getCurrentUser(){
+		return userUN;
+	}
 }
