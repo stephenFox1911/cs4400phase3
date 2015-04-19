@@ -9,6 +9,10 @@ import javax.swing.JPanel;
 
 import loginView.FirstView;
 import UserView.LoggedInView;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 /**
  * The Frame of the application
  * Contains Main Method
@@ -17,7 +21,7 @@ import UserView.LoggedInView;
  */
 public class MainFrame {
 
-    private static JFrame frame;
+    public static JFrame frame;
     private static FirstView login;
     private static LoggedInView LoggedIn;
     private static CardLayout card;
@@ -32,7 +36,8 @@ public class MainFrame {
                 try {
                     @SuppressWarnings("unused")
                     MainFrame window = new MainFrame();
-                    MainFrame.frame.setResizable(false);
+                    
+                    MainFrame.frame.setResizable(true);
                     MainFrame.frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -53,7 +58,14 @@ public class MainFrame {
      */
     private void initialize() {
         frame = new JFrame("Library System");
-        frame.setBounds(100, 100, 450, 300);
+        frame.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent arg0) {
+                System.out.println(arg0);
+            }
+        });
+        frame.getContentPane().setLayout(new BorderLayout());
+        frame.setBounds(200, 200, 450, 300);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         viewHolder = new JPanel();
@@ -67,6 +79,7 @@ public class MainFrame {
         login = new FirstView();
         viewHolder.add(login, "login");
         card.show(viewHolder, "login");
+        
 
     }
 
@@ -74,7 +87,7 @@ public class MainFrame {
      * Changes the main frames length and height
      * 
      * @param x
-     *            length
+     *            width
      * @param y
      *            height
      */
@@ -85,6 +98,7 @@ public class MainFrame {
 
     /**
      * Shows This switches over to what a logged in user will see
+     * @param type the type of user, this will affect what shows
      */
     public static void showUserView(String username,String password) {
         card.show(viewHolder, "userView");
@@ -99,6 +113,7 @@ public class MainFrame {
     public static void restartToLogin() {
         login.reset();
         LoggedIn.reset();
+        login.showLogin();
         card.show(viewHolder, "login");
 
     }

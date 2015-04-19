@@ -415,28 +415,6 @@ public class RegistrationPage extends JPanel {
              * Event where the select button is pressed.
              */
             public void actionPerformed(ActionEvent arg0) {
-            	
-            	if(validInfo(textFirstName.getText(),
-                        textLastName.getText(),
-                        rdbtnMale.isSelected(),rdbtnFemale.isSelected(),
-                        chckbxFaculty.isSelected(),
-                        departmentsList.getSelectedItem(),
-                        textMonth.getText(),textDay.getText(),
-                        textYear.getText(),textEmail.getText(),
-                        textStreet.getText(),textCity.getText(),
-                        textState.getText(),textZIP.getText())) {
-            		
-            		registerUser(textFirstName.getText(),
-                            textLastName.getText(),
-                            rdbtnMale.isSelected(),
-                            chckbxFaculty.isSelected(),
-                            departmentsList.getSelectedItem(),
-                            textMonth.getText(),textDay.getText(),
-                            textYear.getText(),textEmail.getText(),
-                            textStreet.getText(),textCity.getText(),
-                            textState.getText(),textZIP.getText());
-            	}
-            	
                 String print = textFirstName.getText() + ", "
                     + textLastName.getText() + ", " + rdbtnMale.isSelected()
                     + ", " + chckbxFaculty.isSelected() + ", "

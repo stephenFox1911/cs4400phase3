@@ -69,7 +69,7 @@ public class NewTableModel extends AbstractTableModel {
     }
 
     public boolean isCellEditable(int row, int column) {
-        if (column != 0) {
+        if (column != 0 && !(this.getValueAt(row, column) instanceof Boolean)) {
             return false;
         }
         return true;

@@ -52,7 +52,7 @@ public class LoggedInView extends JPanel {
         btnLogout.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 
-                userInterface.showBookSearch();
+                userInterface.setAndShowType("");
                 MainFrame.restartToLogin();
             }
         });
@@ -64,7 +64,7 @@ public class LoggedInView extends JPanel {
     }
 
     public void reset() {
-        userInterface.showBookSearch();
+        userInterface.setAndShowType("");
         
     }
 }
