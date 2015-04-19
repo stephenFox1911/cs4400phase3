@@ -1,17 +1,3 @@
 INDEX VERSION 1.126+/home/steve/school/databases/cs4400phase3/.metadata/.plugins/org.eclipse.jdt.core
-1542295703.index
-236745339.index
-664763560.index
-2258081849.index
-1674117299.index
-904630323.index
-1499422857.index
-2777851529.index
-1352482354.index
-1501762068.index
-4150515921.index
-2428728599.index
-4091468660.index
-1528807726.index
-3706626032.index
 1705389281.index
+2243900820.index
