@@ -461,6 +461,7 @@ public class RegistrationPage extends JPanel {
     	DBdriver db = new DBdriver();
     	//String query = isFaculty ? "UPDATE NON_STAFF_USER  SET fname=\"%s\", lname=\"%s\", gender=\"%s\", address=\"%s\", total_penalties=0, dob=\"%s\", email=\"%s\" WHERE username=\"%s\"; UPDATE FACULTY SET department=\"%s\" WHERE faculty_username=\"%s\"".format(fname,lname,(isMale ? "m":"f"),st+","+city+","+state+","+zip,m+d+y,email,containedIn.userUN,dep,containedIn.userUN):
     		//"UPDATE NON_STAFF_USER  SET fname=\"%s\", lname=\"%s\", gender=\"%s\", address=\"%s\", total_penalties=0, dob=\"%s\", email=\"%s\" WHERE username=\"%s\"".format(fname,lname,(isMale ? "m":"f"),st+","+city+","+state+","+zip,m+d+y,email,containedIn.userUN);
+    	//isFaculty ? String.format("UPDATE NON_STAFF_USER SET fname=\'%s\', lname=\'%s\', gender=\'%s\', address=\'%s\', total_penalties=0, dob=\'%s\', email=\'%s\' WHERE username=\'%s\'; UPDATE FACULTY SET department=\'%s\' WHERE faculty_username=\'%s\'", fname,lname,(isMale ? "m":"f"), st+","+city+","+state+","+zip,y+"-"+m+"-"+d,email,containedIn.userUN,dep,containedIn.userUN) :
     	String query = String.format("UPDATE NON_STAFF_USER SET fname=\'%s\', lname=\'%s\', gender=\'%s\', address=\'%s\', total_penalties=0, dob=\'%s\', email=\'%s\' WHERE username=\'%s\'", fname,lname,(isMale ? "m":"f"), st+","+city+","+state+","+zip,y+"-"+m+"-"+d,email,containedIn.userUN);
     	System.out.println("Actual Query: " + query);
     	db.sendUpdate(query);
