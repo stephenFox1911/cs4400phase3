@@ -179,8 +179,9 @@ public class UNameCheck extends JPanel {
     }
     
     public void createUser(String username,String password) {
+    	System.out.println("UNameCheck creating user.");
     	DBdriver db = new DBdriver();
-    	db.sendQuery(String.format("INSERT INTO NON_STAFF_USER (username,password,is_debarred) VALUES (\"%s\",\"%s\",FALSE)",username,password));
+    	db.sendUpdate(String.format("INSERT INTO NON_STAFF_USER (username,password,is_debarred) VALUES (\"%s\",\"%s\",FALSE)",username,password));
     	db.closeConnection();
     	containedIn.userUN = username;
     	containedIn.userPW = password;
