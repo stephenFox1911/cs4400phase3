@@ -12,6 +12,7 @@ import java.awt.Insets;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
 
+import DBdriver.DBdriver;
 import UserView.UserView;
 
 import javax.swing.JButton;
@@ -19,8 +20,10 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableCellRenderer;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.sql.ResultSet;
 
 public class Holds extends JPanel {
     private JTable table;
@@ -180,6 +183,20 @@ public class Holds extends JPanel {
     }
 
     public void requestHold(Object[] selected) {
+    	String query1 = String.format("SELECT COUNT(*) < (SELECT COUNT(*) FROM COPY WHERE COPY.book_isbn=\"%s\") FROM COPY, ISSUE WHERE COPY.book_isbn=\"%s\" AND COPY.book_isbn=ISSUE.co_book_isbn",selected[2],selected[2]);
+    	String query2 = String.format("SELECT COUNT(*) < 1 FROM NON_STAFF_USER, ISSUE WHERE NON_STAFF_USER.usernname=\"%s\" AND NON_STAFF_USER.username=ISSUE.co_username AND ISSUE.co_book_isbn=\"%s\"",containedIn.getCurrentUser(),selected[2]);
+    	DBdriver db = new DBdriver();
+    	ResultSet result1 = db.sendQuery(query1);
+    	ResultSet result2 = db.sendQuery(query2);
+    	if (result1.next()&&result2.next()) {
+    		if (result1.getBoolean(1)&&result2.getBoolean(1)) {
+    			String query3 = String.format("INSERT INTO ISSUE (est_return_date, date_created, co_username, co_bcopy_no, co_book_isbn, extension_count) VALUES (DATE_ADD(NOW(), INTEVAL 17 DAY), NOW(),\"%s\",\"%s\",\"%s\", 0)",containedIn.getCurrentUser(),selected[4],selected[2]);
+    			db.sendUpdate(query3);
+    		}
+    		else {
+    			JOptionPane.showMessageDialog(this,"All copies of this book are currently on hold or checked out.");
+    		}
+    	}
     	System.out.println(selected[1]);
     	System.out.println(selected[2]);
     	System.out.println(selected[3]);
