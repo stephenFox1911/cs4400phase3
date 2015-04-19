@@ -2,15 +2,23 @@ package TaskViews;
 
 import javax.swing.JPanel;
 
+import DBdriver.DBdriver;
 import UserView.UserView;
+
 import java.awt.GridBagLayout;
+
 import javax.swing.JLabel;
+
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+
 import javax.swing.JTextField;
 import javax.swing.JButton;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class DamagedLostBook extends JPanel {
     UserView containedIn;
@@ -18,6 +26,7 @@ public class DamagedLostBook extends JPanel {
     private JTextField txtCurrenttime;
     private JTextField txtLastuser;
     private JTextField txtChargeammount;
+    private String penaltyUsername;
     /**
      * Create the panel.
      */
@@ -135,6 +144,19 @@ public class DamagedLostBook extends JPanel {
         gbc_btnBack.gridy = 7;
         add(btnBack, gbc_btnBack);
         
+        btnSubmit.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	assessPenalty(penaltyUsername,Float.parseFloat(txtChargeammount.getText()),textISBN.getText(),"temp");
+            	containedIn.showBookSearch();
+            }
+        });
+        
+        btnLookForLastUser.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	penaltyUsername = getPreviousUser(textISBN.getText(),"temp");
+            }
+        });
+        
         btnBack.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	containedIn.showReturns();
@@ -143,6 +165,32 @@ public class DamagedLostBook extends JPanel {
         
             
             
+    }
+    
+    public String getPreviousUser(String isbn,String copyNo) {
+    	String query = String.format("SELECT username,fname,lname FROM (SELECT NON_STAFF_USER.username AS username, NON_STAFF_USER.fname AS fname, NON_STAFF_USER.lname AS lname, ISSUE.est_return_date AS est_return_date FROM NON_STAFF_USER INNER JOIN ISSUE ON NON_STAFF_USER.username=ISSUE.co_username WHERE ISSUE.co_book_isbn=\"%s\" AND ISSUE.co_bcopy_no=\"%s\")  AND est_return_date=(SELECT MIN(est_return_date) FROM ISSUE)) AS S",isbn,copyNo);
+    	DBdriver db = new DBdriver();
+    	ResultSet result = db.sendQuery(query);
+    	try {
+			result.next();
+			txtLastuser.setText(result.getString("fname")+" "+result.getString("lname"));
+			return result.getString("username");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	db.closeConnection();
+    	return "";
+    	
+    }
+    
+    public void assessPenalty(String username,float penalty,String isbn,String copyNo) {
+    	String query = String.format("UPDATE NON_STAFF_USER SET total_penalties = total_penalties+%f WHERE username=\"%s\"",penalty,username);
+    	DBdriver db = new DBdriver();
+    	db.sendUpdate(query);
+    	db.sendUpdate("UPDATE NON_STAFF_USER SET is_debarred=TRUE WHERE total_penalties >= 100");
+    	db.sendUpdate(String.format("UPDATE COPY SET is_damaged=TRUE WHERE book_isbn=\"%s\" AND copy_number=\"%s\"",isbn,copyNo));
+    	db.closeConnection();
     }
 
 }
