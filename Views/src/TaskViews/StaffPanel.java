@@ -7,6 +7,7 @@ import java.awt.GridLayout;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
 
+import DBdriver.DBdriver;
 import UserView.UserView;
 
 import java.awt.GridBagLayout;
@@ -14,6 +15,7 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.sql.ResultSet;
 
 
 public class StaffPanel extends JPanel {
@@ -80,7 +82,27 @@ public class StaffPanel extends JPanel {
         
         
         btnCheckout.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent ae) {
+            	DBdriver db = new DBdriver();
+            	String current = "";
+            	String estReturn = "";
+            	
+            	
+            	ResultSet dates = db.sendQuery("SELECT CURDATE(), DATE_ADD(CURDATE(), INTERVAL 14 DAY) FROM ISSUE;");
+            	try { 
+            	dates.next();
+            	current = dates.getString(1);
+            	estReturn = dates.getString(2);
+            	System.out.println(current);
+            	System.out.println(estReturn);
+            	
+            	} catch (Exception e) {
+            		e.printStackTrace();
+            	}
+            	
+            	db.closeConnection();
+            	
+            	containedIn.getCheckoutPage().setDates(current, estReturn);
             	containedIn.showCheckout();
             }
         });
