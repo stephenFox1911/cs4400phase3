@@ -85,8 +85,8 @@ public class UserView extends JPanel {
      * 
      * @param a
      */
-    public void showSearchResults(int a) {
-        results.updateTable(a);
+    public void showSearchResults(Object[][] resArray) {
+        results.updateTable(resArray);
         this.showSearchResults();
 
     }
