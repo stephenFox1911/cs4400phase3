@@ -55,18 +55,6 @@ public class SearchResults extends JPanel {
             Double.MIN_VALUE};
         setLayout(gridBagLayout);
 
-        // Object[][] data = new Object[5][5];
-        // for (int i = 0; i < 5; i++) {
-        // data[i][0] = new Boolean(false);
-        // data[i][1] = "SomeISSN String";
-        // data[i][2] = "title";
-        // data[i][3] = (Integer) i;
-        // data[i][4] = (Integer) 2 * i;
-        // }
-        //
-
-        // searchTable.setFillsViewportHeight(true);
-
         tableModel = new NewTableModel(header, data);
         
         JLabel lblBookselection = new JLabel("BookSelection");
@@ -148,22 +136,8 @@ public class SearchResults extends JPanel {
      * @param a
      */
     public void updateTable(Object[][] results) {
-        /*
-    	Object[][] newData = new Object[a][6];
-        for (int i = 0; i < a; i++) {
-
-            newData[i][0] = false;
-            newData[i][1] = "Some ISBN String";
-            newData[i][2] = "title";
-            newData[i][3] = (Integer) i;
-            newData[i][4] = (Integer) 2 * i;
-            newData[i][5] = (Integer) (2 * i) % 3;
-        }
-        */
-        
+       
         tableModel.changeData(header, results);
-
-        // searchTable = new JTable(data, header);
 
     }
 }
