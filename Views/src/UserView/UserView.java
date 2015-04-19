@@ -156,7 +156,8 @@ public class UserView extends JPanel {
         MainFrame.resize(343, 265);
     }
 
-    public void showDamageReport() {
+    public void showDamageReport(String[] subjects) {
+    	damageReport.setSubjects(subjects);
         layout.show(this, "damageReport");
         MainFrame.resize(345, 449);
     }
