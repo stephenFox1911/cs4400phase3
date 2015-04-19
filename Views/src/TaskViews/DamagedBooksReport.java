@@ -153,7 +153,7 @@ public class DamagedBooksReport extends JPanel {
 
         btnBack.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                in.showBookSearch();
+            	containedIn.showBookSearch();
             }
         });
 

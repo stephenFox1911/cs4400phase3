@@ -137,7 +137,7 @@ public class DamagedLostBook extends JPanel {
         
         btnBack.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                in.showReturns();
+            	containedIn.showReturns();
             }
         });
         

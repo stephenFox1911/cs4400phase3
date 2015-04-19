@@ -127,7 +127,7 @@ public class Holds extends JPanel {
         btnBack = new JButton("Back");
         btnBack.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                in.showSearchResults();
+                containedIn.showSearchResults();
             }
         });
         

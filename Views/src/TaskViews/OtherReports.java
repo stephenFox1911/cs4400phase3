@@ -73,7 +73,7 @@ public class OtherReports extends JPanel {
         
         buttonBack.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                in.showBookSearch();
+            	containedIn.showBookSearch();
             }
         });
         

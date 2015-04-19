@@ -122,6 +122,7 @@ public class ReturnBook extends JPanel {
         gbc_lblReturnedInDammeged.gridy = 4;
         add(lblReturnedInDammeged, gbc_lblReturnedInDammeged);
         
+        //TODO: Choice is out of scope for action listener. Needs to be resolved
         Choice choice = new Choice();
         choice.add("No");
         choice.add("Yes");
@@ -150,16 +151,16 @@ public class ReturnBook extends JPanel {
         
         btnBack.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                in.showBookSearch();
+            	containedIn.showBookSearch();
             }
         });
         
         btnReturnBook.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (choice.getSelectedItem().equals("Yes")){
-                    in.showDamageLost();
+                	containedIn.showDamageLost();
                 } else {
-                    in.showBookSearch();
+                	containedIn.showBookSearch();
                 }
             }
         });

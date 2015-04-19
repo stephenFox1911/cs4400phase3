@@ -135,7 +135,7 @@ public class SearchBooks extends JPanel {
 
         btnTrackBookLocation.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-                in.showTrackBookLocation();
+            	containedIn.showTrackBookLocation();
             }
         });
         

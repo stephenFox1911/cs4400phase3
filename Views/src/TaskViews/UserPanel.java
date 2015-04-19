@@ -43,14 +43,14 @@ public class UserPanel extends JPanel {
                 
                 btnRequestFutureHold.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
-                        in.showFutureHoldRequest();
+                    	containedIn.showFutureHoldRequest();
                     }
                 });
         
         
         btnRequestExtension.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                in.showRequestExtenstion();
+            	containedIn.showRequestExtenstion();
             }
         });
 

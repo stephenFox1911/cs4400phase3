@@ -81,37 +81,37 @@ public class StaffPanel extends JPanel {
         
         btnCheckout.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                in.showCheckout();
+            	containedIn.showCheckout();
             }
         });
         
         btnBookReturn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                in.showReturns();
+            	containedIn.showReturns();
             }
         });
         
         btnDamagedBooksReport.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                in.showDamageReport();
+            	containedIn.showDamageReport();
             }
         });
         
         btnPopularBooksReport.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                in.showPopularBookReport();
+            	containedIn.showPopularBookReport();
             }
         });
 
         btnFrequentUsersReport.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                in.showFrequentUserReport();
+            	containedIn.showFrequentUserReport();
             }
         });
         
         btnPopularSubjectReport.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                in.showPopularSubjectReport();
+            	containedIn.showPopularSubjectReport();
             }
         });
     }
