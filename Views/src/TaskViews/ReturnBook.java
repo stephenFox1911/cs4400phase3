@@ -21,6 +21,7 @@ public class ReturnBook extends JPanel {
     private JTextField textISBN;
     private JTextField textField;
     private JTextField txtUserName;
+    private Choice choice;
     /**
      * Create the panel.
      */
@@ -123,7 +124,7 @@ public class ReturnBook extends JPanel {
         add(lblReturnedInDammeged, gbc_lblReturnedInDammeged);
         
         //TODO: Choice is out of scope for action listener. Needs to be resolved
-        Choice choice = new Choice();
+        choice = new Choice();
         choice.add("No");
         choice.add("Yes");
         GridBagConstraints gbc_choice = new GridBagConstraints();
