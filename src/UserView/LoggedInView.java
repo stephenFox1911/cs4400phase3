@@ -21,6 +21,8 @@ import java.awt.event.ActionEvent;
 public class LoggedInView extends JPanel {
 
     private UserView userInterface;
+    public String userUN;
+    public String userPW;
 
     public LoggedInView() {
         GridBagLayout gridBagLayout = new GridBagLayout();
@@ -57,7 +59,6 @@ public class LoggedInView extends JPanel {
         logOutPannel.add(btnLogout);
         
     }
-
     public UserView getUserView() {
         return userInterface;
     }

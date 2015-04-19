@@ -128,7 +128,7 @@ public class UNameCheck extends JPanel {
              */
             public void actionPerformed(ActionEvent e) {
             	if(credentialsValid(textUsername.getText(),passwordField1.getText(),passwordField2.getText())) {
-            		//createUser(textUsername.getText(),passwordField1.getText());
+            		createUser(textUsername.getText(),passwordField1.getText());
             		containedIn.showRPage();
             	}
             }
@@ -148,11 +148,13 @@ public class UNameCheck extends JPanel {
     	//If all fields are non-empty, check validity based on other requirements
     	else {
 	    	//Check if username is taken
-    		//TODO: Replace test query
-	    	String query = String.format("SELECT username FROM USER WHERE username=\"%s\"",username);
+	    	String query = String.format(
+	    			"SELECT SUM(cnt) FROM (SELECT COUNT(*) AS cnt FROM NON_STAFF_USER WHERE username=\"%s\" UNION "+
+	    	"SELECT COUNT(*) AS cnt FROM STAFF WHERE staff_username=\"%s\") AS A",username,username);
 	    	ResultSet result = db.sendQuery(query);
 	    	try {
-				if (!result.next()) {
+	    		result.next();
+				if (result.getInt(1)==0) {
 					usernameValid = true;
 				}
 				else {
@@ -169,15 +171,18 @@ public class UNameCheck extends JPanel {
 	    		errMsg += "The password fields do not match.";
 	    	}
     	}
-    	JOptionPane.showMessageDialog(this,errMsg);
+    	if(!errMsg.equals("")) {
+    		JOptionPane.showMessageDialog(this,errMsg);
+    	}
     	return usernameValid && passwordValid;
     }
     
     public void createUser(String username,String password) {
     	DBdriver db = new DBdriver();
-    	//TODO: put appropriate query here
-    	db.sendQuery(String.format("INSERT INTO USER VALUES (username=\"%s\",password=\"%s\")",username,password));
+    	db.sendQuery(String.format("INSERT INTO NON_STAFF_USER (username,password,is_debarred) VALUES (\"%s\",\"%s\",FALSE)",username,password));
     	db.closeConnection();
+    	containedIn.userUN = username;
+    	containedIn.userPW = password;
     }
     
     public void clearFields() {

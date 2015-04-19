@@ -463,10 +463,8 @@ public class RegistrationPage extends JPanel {
     		return false;
     	}
     	else {
-    		//TODO:Should we check validity of date/email/etc here?
-    		registerUser(fname,lname,isMale,isFaculty,dep,m,d,y,email,st,city,state,zip);
+    		return true;
     	}
-    	return true;
     }
     
     public void registerUser(String fname,String lname,boolean isMale,
@@ -474,7 +472,9 @@ public class RegistrationPage extends JPanel {
     		String st,String city,String state,String zip) {
     	DBdriver db = new DBdriver();
     	//TODO: apprpriate query
-    	db.sendQuery(String.format("query here","stuff"));
+    	String query = isFaculty ? "UPDATE NON_STAFF_USER  SET fname=\"%s\", lname=\"%s\", gender=\"%s\", address=\"%s\", total_penalties=0, dob=\"%s\", email=\"%s\" WHERE username=\"%s\"; UPDATE FACULTY SET department=\"%s\" WHERE faculty_username=\"%s\"".format(fname,lname,(isMale ? "m":"f"),st+","+city+","+state+","+zip,m+d+y,email,containedIn.userUN,dep,containedIn.userUN):
+    		"UPDATE NON_STAFF_USER  SET fname=\"%s\", lname=\"%s\", gender=\"%s\", address=\"%s\", total_penalties=0, dob=\"%s\", email=\"%s\" WHERE username=\"%s\"".format(fname,lname,(isMale ? "m":"f"),st+","+city+","+state+","+zip,m+d+y,email,containedIn.userUN);
+    	db.sendQuery(query);
     	db.closeConnection();
     }
     

@@ -86,8 +86,10 @@ public class MainFrame {
     /**
      * Shows This switches over to what a logged in user will see
      */
-    public static void showUserView() {
+    public static void showUserView(String username,String password) {
         card.show(viewHolder, "userView");
+        LoggedIn.userUN = username;
+        LoggedIn.userPW = password;
         LoggedIn.getUserView().showBookSearch();
     }
 

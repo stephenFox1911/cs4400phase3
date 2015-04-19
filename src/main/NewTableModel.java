@@ -57,7 +57,7 @@ public class NewTableModel extends AbstractTableModel {
     
     public Object[] getSelected() throws NothingSelectedException{
         for (Object[] x : data){
-            if ((boolean) x[0] == true){
+            if (x[0] instanceof boolean[]){
                 return x;
             }
         }

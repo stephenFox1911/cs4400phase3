@@ -126,13 +126,18 @@ public class LoginPage extends JPanel {
 
         btnLogin.addActionListener(new ActionListener() {
             /**
-             * Log the user in with apropriate view
+             * Log the user in with appropriate view
              */
             public void actionPerformed(ActionEvent e) {
             	//If user is non-staff
             	if(checkLogin(userNameField.getText(),passwordField.getText())==1) {
             		clearFields();
-                    MainFrame.showUserView();
+                    MainFrame.showUserView(userNameField.getText(),passwordField.getText());
+            	}
+            	//If user is staff
+            	else if(checkLogin(userNameField.getText(),passwordField.getText())==2) {
+            		clearFields();
+            		//TODO: transition to staff stuff
             	}
             }
         });
@@ -151,21 +156,21 @@ public class LoginPage extends JPanel {
      * 2 -> valid staff user
     */
     public int checkLogin(String username,String password){
-    	//TODO: Make this correct col number
-    	final int isStaffColNo = 1;
     	int ret = 0;
     	DBdriver db = new DBdriver();
     	//TODO: Put correct query
-    	String query = String.format("SELECT * FROM USER WHERE username=\"%s\" AND password=\"%s\"",username,password);
-    	ResultSet result = db.sendQuery(query);
+    	String query1 = String.format("SELECT COUNT(*) FROM NON_STAFF_USER WHERE username=\"%s\" AND password=\"%s\"",username,password);
+    	String query2 = String.format("SELECT COUNT(*) FROM STAFF WHERE staff_username=\"%s\" AND staff_password=\"%s\"",username,password);
+    	ResultSet result1 = db.sendQuery(query1);
+    	ResultSet result2 = db.sendQuery(query2);
     	try {
-			if(result.next()) {
+			if(result1.next()) {
 				try {
-					if(result.getInt(isStaffColNo)==1) {
-						ret = 2;
-					}
-					else {
+					if(result1.getInt(1)==1) {
 						ret = 1;
+					}
+					else if(result2.getInt(1)==1){
+						ret = 2;
 					}
 				}
 				catch (Exception e) {

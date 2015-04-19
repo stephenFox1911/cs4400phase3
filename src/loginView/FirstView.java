@@ -16,13 +16,17 @@ public class FirstView extends JPanel {
     private UNameCheck nameCheck;
     private RegistrationPage rPage;
     private CardLayout layout;
-
+    public String userUN;
+    public String userPW;
+    
     /**
      * Create the panel.
      */
     public FirstView() {
         super();
-
+        
+        
+        
         login = new LoginPage(this);
         nameCheck = new UNameCheck(this);
         rPage = new RegistrationPage(this);
