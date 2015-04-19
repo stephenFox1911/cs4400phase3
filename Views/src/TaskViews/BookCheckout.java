@@ -27,10 +27,15 @@ public class BookCheckout extends JPanel {
     private JTextField textUsername;
     private JTextField textCopyno;
     private JTextField txtEstReturnDate;
+    private String currentInfoFor;
+    BookCheckout thisItem = this;
     /**
      * Create the panel.
      */
     public BookCheckout(UserView in) {
+    	
+    	currentInfoFor = "";
+    	
         GridBagLayout gridBagLayout = new GridBagLayout();
         gridBagLayout.columnWidths = new int[]{5, 53, 100, 5, 76, 0, 50, 50, 5, 0};
         gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0};
@@ -183,11 +188,53 @@ public class BookCheckout extends JPanel {
         btnBack.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 containedIn.showBookSearch();
+                thisItem.clearFields();
             }
         });
         
         btnConfirm.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent arg0) {
+        		
+        		if (textISBN.getText().length() == 0){
+        			JOptionPane.showMessageDialog(null, "Please Check if a hold exsists.", "Did not check." , JOptionPane.INFORMATION_MESSAGE);
+        		} else {
+        			
+        			String querry1 = "DELETE FROM ISSUE WHERE issue_id = %s AND co_book_isbn = %s;";
+        			String querry2 = "INSERT INTO ISSUE (est_return_date, date_created, co_username, co_book_copy, co_book_isbn) "
+        					+ "VALUES (DATE_ADD(CURDATE(), INTERVAL 14 day), CURDATE(), %s, %s, %s);" ;
+        			String querry3 = "UPDATE COPY SET is_checked_out = TRUE WHERE copy_number = %s AND book_isbn = %s;";
+
+        			DBdriver db = new DBdriver();
+        			
+        			try { 
+       				if( db.sendUpdate(String.format(querry1, currentInfoFor, textISBN.getText())) == 1){
+       					
+       					db.sendUpdate(String.format(querry2 , textUsername.getText(), textCopyno.getText(), textISBN.getText()));
+       					db.sendUpdate(String.format(querry3,textCopyno.getText(),textISBN.getText()));
+       					
+       					
+        				System.out.println(String.format(querry1, currentInfoFor, textISBN.getText()));
+        				
+        				System.out.println(String.format(querry2 + querry3, textUsername.getText(),
+        							textCopyno.getText(), textISBN.getText(),textCopyno.getText(),textISBN.getText()));
+        				
+        					JOptionPane.showMessageDialog(null, "Book Checked out.", "Book Checked Out." , JOptionPane.INFORMATION_MESSAGE);
+        					
+      				} else {
+       					JOptionPane.showMessageDialog(null, "Hold not droped.", "Hold not droped." , JOptionPane.INFORMATION_MESSAGE);
+      				}
+       				
+        				
+        			} catch (Exception e) {
+        				
+        			}
+        			
+        			db.closeConnection();
+        			containedIn.showBookSearch();
+        			thisItem.clearFields();
+        			
+        		}
+        		
         	}
         });
         
@@ -206,6 +253,7 @@ public class BookCheckout extends JPanel {
         				textUsername.setText(hold.getString(1));
         				textCopyno.setText(hold.getString(2));
         				textISBN.setText(hold.getString(3));
+        				currentInfoFor = textIssueID.getText();
         				
         			} else {
         				JOptionPane.showMessageDialog(null, "Hold with that issue id does not exsist.", "Hold doesn't exsist" , JOptionPane.INFORMATION_MESSAGE);
