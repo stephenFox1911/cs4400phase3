@@ -459,12 +459,18 @@ public class RegistrationPage extends JPanel {
     		String st,String city,String state,String zip) {
     	    	
     	DBdriver db = new DBdriver();
-    	//String query = isFaculty ? "UPDATE NON_STAFF_USER  SET fname=\"%s\", lname=\"%s\", gender=\"%s\", address=\"%s\", total_penalties=0, dob=\"%s\", email=\"%s\" WHERE username=\"%s\"; UPDATE FACULTY SET department=\"%s\" WHERE faculty_username=\"%s\"".format(fname,lname,(isMale ? "m":"f"),st+","+city+","+state+","+zip,m+d+y,email,containedIn.userUN,dep,containedIn.userUN):
-    		//"UPDATE NON_STAFF_USER  SET fname=\"%s\", lname=\"%s\", gender=\"%s\", address=\"%s\", total_penalties=0, dob=\"%s\", email=\"%s\" WHERE username=\"%s\"".format(fname,lname,(isMale ? "m":"f"),st+","+city+","+state+","+zip,m+d+y,email,containedIn.userUN);
-    	//isFaculty ? String.format("UPDATE NON_STAFF_USER SET fname=\'%s\', lname=\'%s\', gender=\'%s\', address=\'%s\', total_penalties=0, dob=\'%s\', email=\'%s\' WHERE username=\'%s\'; UPDATE FACULTY SET department=\'%s\' WHERE faculty_username=\'%s\'", fname,lname,(isMale ? "m":"f"), st+","+city+","+state+","+zip,y+"-"+m+"-"+d,email,containedIn.userUN,dep,containedIn.userUN) :
-    	String query = String.format("UPDATE NON_STAFF_USER SET fname=\'%s\', lname=\'%s\', gender=\'%s\', address=\'%s\', total_penalties=0, dob=\'%s\', email=\'%s\' WHERE username=\'%s\'", fname,lname,(isMale ? "m":"f"), st+","+city+","+state+","+zip,y+"-"+m+"-"+d,email,containedIn.userUN);
-    	System.out.println("Actual Query: " + query);
-    	db.sendUpdate(query);
+    	
+    	if(isFaculty) {
+    		System.out.println("Registering a new Faculty member.");
+    		String facQuery1 = String.format("UPDATE NON_STAFF_USER SET fname=\'%s\', lname=\'%s\', gender=\'%s\', address=\'%s\', total_penalties=0, dob=\'%s\', email=\'%s\' WHERE username=\'%s\'", fname,lname,(isMale ? "m":"f"), st+","+city+","+state+","+zip,y+"-"+m+"-"+d,email,containedIn.userUN);
+    		String facQuery2 = String.format("INSERT INTO FACULTY (faculty_username, department) VALUES (\'%s\', \'%s\')", containedIn.userUN, dep);
+    		db.sendUpdate(facQuery1);
+    		db.sendUpdate(facQuery2);
+    	} else {
+    		System.out.println("Registering a new student.");
+	    	String query = String.format("UPDATE NON_STAFF_USER SET fname=\'%s\', lname=\'%s\', gender=\'%s\', address=\'%s\', total_penalties=0, dob=\'%s\', email=\'%s\' WHERE username=\'%s\'", fname,lname,(isMale ? "m":"f"), st+","+city+","+state+","+zip,y+"-"+m+"-"+d,email,containedIn.userUN);
+	    	db.sendUpdate(query);
+    	}
     	db.closeConnection();
     }
    
