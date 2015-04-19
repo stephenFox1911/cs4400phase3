@@ -62,6 +62,14 @@ public class UserView extends JPanel {
         this.add(popularSubject, "popularSubject");
 
     }
+    
+    public DamagedBooksReport getDamageReport(){
+    	return damageReport;
+    }
+    
+    public BookCheckout getCheckoutPage(){
+    	return checkout;
+    }
 
     /**
      * Switches to the book search view
