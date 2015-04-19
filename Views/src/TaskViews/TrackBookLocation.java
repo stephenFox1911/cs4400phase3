@@ -2,16 +2,24 @@ package TaskViews;
 
 import javax.swing.JPanel;
 
+import DBdriver.DBdriver;
 import UserView.UserView;
+
 import java.awt.GridBagLayout;
+
 import javax.swing.JLabel;
+
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.border.BevelBorder;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class TrackBookLocation extends JPanel {
     private UserView containedIn;
@@ -170,8 +178,27 @@ public class TrackBookLocation extends JPanel {
         
         btnLocate.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+            	getLocation(txtIsbn.getText());
             }
         });
+    }
+    
+    public void getLocation(String isbn) {
+    	String query = String.format("SELECT BOOK.sname, BOOK.shelf_no, BOOK.shelf_floor_no, SHELF.aisle_number FROM BOOK INNER JOIN SHELF ON BOOK.shelf_no=SHELF.shelf_number WHERE BOOK.isbn=\"%s\" AND BOOK.shelf_floor_no=SHELF.fnumber",isbn);
+    	DBdriver db = new DBdriver();
+    	ResultSet result = db.sendQuery(query);
+    	try {
+    		if (result.next()) {
+    			this.txtSubject.setText(result.getString("sname"));
+    			this.txtShelfnumber.setText(result.getString("shelf_no"));
+    			this.txtAislenumber.setText(result.getString("aisle_number"));
+    			this.txtFloornumber.setText(result.getString("shelf_floor_no"));
+    		}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
     }
 
 }
