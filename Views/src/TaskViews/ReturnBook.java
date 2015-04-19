@@ -2,18 +2,26 @@ package TaskViews;
 
 import javax.swing.JPanel;
 
+import DBdriver.DBdriver;
 import UserView.UserView;
+
 import java.awt.GridBagLayout;
+
 import javax.swing.JLabel;
+
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
+
 import java.awt.Choice;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class ReturnBook extends JPanel {
     UserView containedIn;
@@ -158,6 +166,7 @@ public class ReturnBook extends JPanel {
         
         btnReturnBook.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+            	returnBook(textIssueID.getText());
                 if (choice.getSelectedItem().equals("Yes")){
                 	containedIn.showDamageLost();
                 } else {
@@ -167,6 +176,55 @@ public class ReturnBook extends JPanel {
         });
         
 
+    }
+   
+    public void returnBook(String issueID) {
+    	//Get information about the checkout to populate the GUI fields
+    	String query = String.format("SELECT co_username,co_book_isbn,co_bcopy_no,DATEDIFF(NOW(),est_return_date) AS days_overdue FROM ISSUE WHERE issue_id=\'%s\'",issueID);
+    	DBdriver db = new DBdriver();
+    	ResultSet result = db.sendQuery(query);
+    	try {
+    		result.next();
+			this.txtUserName.setText(result.getString("co_username"));
+			this.textISBN.setText(result.getString("co_book_isbn"));
+			this.textField.setText(result.getString("co_bcopy_no"));
+			int daysOverdue = result.getInt("days_overdue");
+			
+			//Assess penalties if needed
+			if (daysOverdue>0) {
+				String getBookCostQuery = String.format("SELECT cost FROM BOOK WHERE isbn=\"%s\"",textISBN.getText());
+				ResultSet bookCostResult = db.sendQuery(getBookCostQuery);
+				bookCostResult.next();
+				float bookCost = bookCostResult.getInt("cost");
+				String updatePenaltiesQuery = String.format("UPDATE NON_STAFF_USER SET total_penalties = total_penalties+%f WHERE username=\"%s\"",Math.min(bookCost*.5,daysOverdue*.5),txtUserName.getText());
+				db.sendUpdate(updatePenaltiesQuery);
+			}
+			
+			//Unflag copy as being checked out
+			String unflagCopyQuery = String.format("UPDATE COPY SET is_checked_out = FALSE WHERE copy_number=\"%s\" AND book_isbn=\"%s\";",textField.getText(),textISBN.getText());
+			db.sendUpdate(unflagCopyQuery);
+			
+			//Check for a future hold request on the book. If one exists, place the book on hold.
+			String checkFutureHoldQuery = String.format("SELECT future_requester FROM COPY WHERE copy_number=\"%s\" AND book_isbn=\"%s\" AND future_requester IS NOT NULL",textField.getText(),textISBN.getText());
+			ResultSet futureHoldResult = db.sendQuery(checkFutureHoldQuery);
+		
+			if (futureHoldResult.next()) {
+				String checkForOtherHoldsQuery = String.format("SELECT COUNT(*)>0 FROM NON_STAFF_USER, ISSUE WHERE NON_STAFF_USER.username=ISSUE.co_username AND ISSUE.co_book_isbn=\"%s\"",textISBN.getText());
+				ResultSet checkForOtherHoldsResult = db.sendQuery(checkForOtherHoldsQuery);
+				
+				//Create the hold, set future requester to null
+				if (!checkForOtherHoldsResult.next()) {
+					String createNewHoldQuery = String.format("INSERT INTO ISSUE (est_return_date, date_created, co_username, co_bcopy_no, co_book_isbn, extensioncount) VALUES (DATE_ADD(CURDATE(), INTERVAL 17 DAY), CURDATE(),\"%s\",\"%s\",\"%s\", 0)",txtUserName.getText(),textField.getText(),textISBN.getText());
+					db.sendUpdate(createNewHoldQuery);
+					String clearFutureRequesterQuery = String.format("UPDATE COPY SET future_requester = NULL WHERE copy_number=\"%s\" AND book_isbn=\"%s\"",textField.getText(),textISBN.getText());
+					db.sendUpdate(clearFutureRequesterQuery);
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	db.closeConnection();
     }
 
 }
