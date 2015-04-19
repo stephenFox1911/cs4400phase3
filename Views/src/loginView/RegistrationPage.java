@@ -24,7 +24,7 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 
-import DBdriverPack.DBdriver;
+import DBdriver.DBdriver;
 import main.JTextFieldLimit;
 
 /**

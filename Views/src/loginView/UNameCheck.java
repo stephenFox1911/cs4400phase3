@@ -15,7 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import DBdriverPack.DBdriver;
+import DBdriver.DBdriver;
 
 @SuppressWarnings("serial")
 public class UNameCheck extends JPanel {

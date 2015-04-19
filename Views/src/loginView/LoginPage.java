@@ -14,8 +14,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.JOptionPane;
 
+import DBdriver.DBdriver;
 import main.MainFrame;
-import DBdriverPack.DBdriver;
 
 import java.sql.*;
 @SuppressWarnings("serial")
@@ -168,6 +168,7 @@ public class LoginPage extends JPanel {
     public int checkLogin(String username,String password){
     	int ret = 0;
     	DBdriver db = new DBdriver();
+    	
     	//TODO: Put correct query
     	String query1 = String.format("SELECT COUNT(*) FROM NON_STAFF_USER WHERE username=\"%s\" AND password=\"%s\"",username,password);
     	String query2 = String.format("SELECT COUNT(*) FROM STAFF WHERE staff_username=\"%s\" AND staff_password=\"%s\"",username,password);
