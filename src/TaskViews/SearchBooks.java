@@ -158,7 +158,6 @@ public class SearchBooks extends JPanel {
 
     }
     public void setType(String type){
-        //System.out.println("!"+type+"!");
         if (type.equals("staff")){
             options.show(extraOptions, "sPanel");
             MainFrame.resize(345, 425);

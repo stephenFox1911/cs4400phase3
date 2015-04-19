@@ -5,6 +5,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -14,8 +16,6 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import DBdriverPack.DBdriver;
-
-import java.sql.*;
 
 @SuppressWarnings("serial")
 public class UNameCheck extends JPanel {
@@ -130,10 +130,8 @@ public class UNameCheck extends JPanel {
             public void actionPerformed(ActionEvent e) {
             	if(credentialsValid(textUsername.getText(),passwordField1.getText(),passwordField2.getText())) {
             		createUser(textUsername.getText(),passwordField1.getText());
-                containedIn.showRPage();
-                System.out.println(textUsername.getText() + ", "
-                    + passwordField1.getText() + ", "
-                    + passwordField2.getText());
+            		containedIn.showRPage();
+            	}
             }
         });
 

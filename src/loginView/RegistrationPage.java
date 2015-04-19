@@ -24,8 +24,8 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 
-import main.JTextFieldLimit;
 import DBdriverPack.DBdriver;
+import main.JTextFieldLimit;
 
 /**
  * This is the panel where a user can enter all information to register.
@@ -429,6 +429,7 @@ public class RegistrationPage extends JPanel {
         });
     }
 
+
     public boolean validInfo(String fname,String lname,boolean isMale,boolean isFemale,
     		boolean isFaculty,String dep,String m,String d,String y,String email,
     		String st,String city,String state,String zip) {
@@ -449,13 +450,12 @@ public class RegistrationPage extends JPanel {
     		boolean isFaculty,String dep,String m,String d,String y,String email,
     		String st,String city,String state,String zip) {
     	DBdriver db = new DBdriver();
-    	//TODO: apprpriate query
     	String query = isFaculty ? "UPDATE NON_STAFF_USER  SET fname=\"%s\", lname=\"%s\", gender=\"%s\", address=\"%s\", total_penalties=0, dob=\"%s\", email=\"%s\" WHERE username=\"%s\"; UPDATE FACULTY SET department=\"%s\" WHERE faculty_username=\"%s\"".format(fname,lname,(isMale ? "m":"f"),st+","+city+","+state+","+zip,m+d+y,email,containedIn.userUN,dep,containedIn.userUN):
     		"UPDATE NON_STAFF_USER  SET fname=\"%s\", lname=\"%s\", gender=\"%s\", address=\"%s\", total_penalties=0, dob=\"%s\", email=\"%s\" WHERE username=\"%s\"".format(fname,lname,(isMale ? "m":"f"),st+","+city+","+state+","+zip,m+d+y,email,containedIn.userUN);
     	db.sendQuery(query);
     	db.closeConnection();
     }
-    
+   
     /**
      * Hides or shows department list and its label. True will show them, false
      * will hide.

@@ -61,13 +61,12 @@ public class MainFrame {
         frame.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent arg0) {
-                System.out.println(arg0);
+                
             }
         });
         frame.getContentPane().setLayout(new BorderLayout());
         frame.setBounds(200, 200, 450, 300);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
         viewHolder = new JPanel();
         frame.getContentPane().add(viewHolder, BorderLayout.CENTER);
         card = new CardLayout(0, 0);
@@ -100,11 +99,11 @@ public class MainFrame {
      * Shows This switches over to what a logged in user will see
      * @param type the type of user, this will affect what shows
      */
-    public static void showUserView(String username,String password) {
+    public static void showUserView(String username,String password,String type) {
         card.show(viewHolder, "userView");
         LoggedIn.userUN = username;
         LoggedIn.userPW = password;
-        LoggedIn.getUserView().showBookSearch();
+        LoggedIn.getUserView().setAndShowType(type);
     }
 
     /**
