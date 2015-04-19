@@ -1,5 +1,6 @@
 package TaskViews;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import java.awt.GridBagLayout;
@@ -15,6 +16,7 @@ import java.awt.Insets;
 import javax.swing.JButton;
 
 import main.MainFrame;
+import DBdriver.DBdriver;
 import UserView.UserView;
 
 import java.awt.Font;
@@ -24,6 +26,8 @@ import java.awt.FlowLayout;
 import javax.swing.SwingConstants;
 import java.awt.GridLayout;
 import java.awt.CardLayout;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class SearchBooks extends JPanel {
     private UserView containedIn;
@@ -129,7 +133,24 @@ public class SearchBooks extends JPanel {
         
         btnSearch.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                containedIn.showSearchResults(Integer.parseInt(textFieldISBN.getText()));
+                //containedIn.showSearchResults(Integer.parseInt(textFieldISBN.getText()));
+            	String searchValue;
+            	String searchType;
+                if(!textFieldISBN.getText().equals("")) {
+                	searchType = "isbn";
+                	searchValue = textFieldISBN.getText();
+                } else if(!textFieldTitle.getText().equals("")) {
+                	searchType = "title";
+                	searchValue = textFieldTitle.getText();
+                } else if (!textFieldAuthor.getText().equals("")) {
+                	searchType = "author";
+                	searchValue = textFieldAuthor.getText();                }
+                else {
+                	searchType = "EMPTY";
+                	searchValue = "EMPTY";                	
+                }
+                
+                search(searchType, searchValue);
             }
         });
 
@@ -165,6 +186,38 @@ public class SearchBooks extends JPanel {
             options.show(extraOptions, "uPanel");
             MainFrame.resize(340, 280);
         }
+    }
+    
+    public void search(String searchType, String searchValue) {
+    	DBdriver db = new DBdriver();
+    	ResultSet rs;
+    	String query = "SELECT BOOK.title, BOOK.isbn, BOOK.edition, copy_count "
+		+ "FROM BOOK "
+		+ "INNER JOIN "
+		+ "(SELECT COPY.book_isbn AS book_isbn, COUNT(DISTINCT COPY.copy_number) "
+		+ "AS copy_count "
+		+ "FROM COPY "
+		+ "WHERE COPY.is_checked_out=FALSE "
+		+ "AND COPY.is_damaged=FALSE GROUP BY COPY.book_isbn) TEMP "
+		+ "ON BOOK.isbn=TEMP.book_isbn "
+		+ "WHERE ";
+    	
+    	if(searchType.equals("EMPTY")) {
+    		JOptionPane.showMessageDialog(this,"Please enter a search value");
+    	} else {
+    		query += searchType+"=\'"+searchValue+"\'";
+    		//System.out.println("Actual Query: " +query);
+    		rs = db.sendQuery(query);
+    		try {
+    			while(rs.next()){
+    				System.out.println(rs.getString("title"));
+    				System.out.println(rs.getInt("copy_count"));
+    			}
+    		} catch(SQLException e){
+    			System.out.println(e.getMessage());
+    		}
+    	}
+    	db.closeConnection();    	
     }
 
 }
