@@ -12,6 +12,7 @@ import javax.swing.JLabel;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 
@@ -135,12 +136,14 @@ public class FutureHoldRequest extends JPanel {
         btnRequest.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		getNextAvailCopy(txtIsbn.getText());
-        		
+        		JOptionPane.showMessageDialog(null,"Press \"Ok\" to place your future hold request.");
         	}
         });
         
         btnOk.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+            	placeFutureHoldReq();
+            	JOptionPane.showMessageDialog(null,"Your future hold request has been placed!");
             }
         });
     }
@@ -159,6 +162,12 @@ public class FutureHoldRequest extends JPanel {
 			e.printStackTrace();
 		}
     	db.closeConnection();
+    }
+    
+    public void placeFutureHoldReq() {
+    	String query = String.format("UPDATE COPY  SET future_requester=\"%s\" WHERE book_isbn=\"%s\" AND copy_number=\"%s\"",containedIn.getCurrentUser(),txtIsbn.getText(),txtCopynumber.getText());
+    	DBdriver db = new DBdriver();
+    	db.sendUpdate(query);
     }
 
 }
