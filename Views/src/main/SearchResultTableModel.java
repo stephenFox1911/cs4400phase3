@@ -16,7 +16,6 @@ public class SearchResultTableModel extends NewTableModel {
 			SearchResults in) {
 		super(header, data);
 		containedIn = in;
-		
 
 	}
 
@@ -33,10 +32,12 @@ public class SearchResultTableModel extends NewTableModel {
 				DBdriver db = new DBdriver();
 				ResultSet result = db.sendQuery(String.format(query2,
 						(String) selected[1]));
-				try{
-				result.next();
-				containedIn.getNextAvailable().setText(result.getString(1));
-				} catch (Exception e){
+				try {
+					if (result.next()) {
+						containedIn.getNextAvailable().setText(
+								result.getString(1));
+					}
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 
@@ -45,8 +46,8 @@ public class SearchResultTableModel extends NewTableModel {
 				containedIn.getNextAvailable().setText("N/A");
 			}
 
-		} catch (NothingSelectedException c){
-			
+		} catch (NothingSelectedException c) {
+
 		} catch (Exception e) {
 
 			e.printStackTrace();

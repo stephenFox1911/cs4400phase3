@@ -193,17 +193,25 @@ public class SearchBooks extends JPanel {
     public void search(String searchType, String searchValue) {
     	DBdriver db = new DBdriver();
     	ResultSet rs;
-    	String query = "SELECT BOOK.title, BOOK.isbn, BOOK.edition, BOOK.on_reserve, copy_count "
-		+ "FROM BOOK "
-		+ "INNER JOIN "
-		+ "(SELECT COPY.book_isbn AS book_isbn, COUNT(DISTINCT COPY.copy_number) "
-		+ "AS copy_count "
-		+ "FROM COPY "
-		+ "WHERE COPY.is_checked_out = FALSE "
-		+ "AND COPY.is_damaged=FALSE GROUP BY COPY.book_isbn) TEMP "
-		+ "ON BOOK.isbn=TEMP.book_isbn "
-		+ "WHERE ";
+//    	String query = "SELECT BOOK.title, BOOK.isbn, BOOK.edition, BOOK.on_reserve, copy_count "
+//		+ "FROM BOOK "
+//		+ "INNER JOIN "
+//		+ "(SELECT COPY.book_isbn AS book_isbn, COUNT(DISTINCT COPY.copy_number) "
+//		+ "AS copy_count "
+//		+ "FROM COPY "
+//		+ "WHERE COPY.is_checked_out = FALSE "
+//		+ "AND COPY.is_damaged=FALSE GROUP BY COPY.book_isbn) TEMP "
+//		+ "ON BOOK.isbn=TEMP.book_isbn "
+//		+ "WHERE ";
     	
+    	String query = "SELECT BOOK.title, BOOK.isbn, BOOK.edition, BOOK.on_reserve, copy_count	FROM "
+    			+ "( BOOK	JOIN AUTHOR ON bisbn = BOOK.isbn )"
+    			+ " INNER JOIN (SELECT COPY.book_isbn, (COUNT( DISTINCT COPY.copy_number ) "
+    			+ "- ( SELECT COUNT( DISTINCT X.copy_number ) "
+    			+ "FROM COPY AS X	"
+    			+ "WHERE (	X.is_damaged =1	OR X.is_checked_out =1)	"
+    			+ "AND COPY.book_isbn = X.book_isbn )) "
+    			+ "AS copy_count FROM COPY GROUP BY book_isbn)TEMP ON BOOK.isbn = TEMP.book_isbn WHERE ";
     	if(searchType.equals("EMPTY")) {
     		JOptionPane.showMessageDialog(this,"Please enter a search value");
     	} else {
