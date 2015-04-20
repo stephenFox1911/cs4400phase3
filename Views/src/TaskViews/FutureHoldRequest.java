@@ -2,15 +2,23 @@ package TaskViews;
 
 import javax.swing.JPanel;
 
+import DBdriver.DBdriver;
 import UserView.UserView;
+
 import java.awt.GridBagLayout;
+
 import javax.swing.JLabel;
+
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+
 import javax.swing.JTextField;
 import javax.swing.JButton;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class FutureHoldRequest extends JPanel {
     private UserView containedIn;
@@ -98,14 +106,14 @@ public class FutureHoldRequest extends JPanel {
         add(txtExpectedavailabledate, gbc_txtExpectedavailabledate);
         txtExpectedavailabledate.setColumns(10);
         
-        JButton btnRequest_1 = new JButton("Request");
+        JButton btnOk = new JButton("Ok");
 
-        GridBagConstraints gbc_btnRequest_1 = new GridBagConstraints();
-        gbc_btnRequest_1.anchor = GridBagConstraints.EAST;
-        gbc_btnRequest_1.insets = new Insets(0, 0, 0, 5);
-        gbc_btnRequest_1.gridx = 3;
-        gbc_btnRequest_1.gridy = 6;
-        add(btnRequest_1, gbc_btnRequest_1);
+        GridBagConstraints gbc_btnOk = new GridBagConstraints();
+        gbc_btnOk.anchor = GridBagConstraints.EAST;
+        gbc_btnOk.insets = new Insets(0, 0, 0, 5);
+        gbc_btnOk.gridx = 3;
+        gbc_btnOk.gridy = 6;
+        add(btnOk, gbc_btnOk);
         
         JButton btnBack = new JButton("Back");
 
@@ -124,10 +132,33 @@ public class FutureHoldRequest extends JPanel {
             }
         });
         
-        btnRequest_1.addActionListener(new ActionListener() {
+        btnRequest.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		getNextAvailCopy(txtIsbn.getText());
+        		
+        	}
+        });
+        
+        btnOk.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             }
         });
+    }
+    
+    public void getNextAvailCopy(String isbn) {
+    	String query = String.format("SELECT MAX(ISSUE.est_return_date), ISSUE.co_bcopy_no FROM ISSUE INNER JOIN COPY ON ISSUE.co_book_isbn=COPY.book_isbn AND ISSUE.co_bcopy_no=COPY.copy_number WHERE COPY.future_requester IS NULL AND COPY.book_isbn=\"%s\" AND COPY.is_damaged=FALSE",isbn);
+    	DBdriver db = new DBdriver();
+    	ResultSet result = db.sendQuery(query);
+    	try {
+			if (result.next()) {
+				 txtCopynumber.setText(result.getString(2));
+				 txtExpectedavailabledate.setText(result.getString(1));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	db.closeConnection();
     }
 
 }
