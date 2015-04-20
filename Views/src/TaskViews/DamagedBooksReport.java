@@ -34,6 +34,7 @@ public class DamagedBooksReport extends JPanel {
 	JComboBox<String> comboSubject1;
 	JComboBox<String> comboSubject2;
 	JComboBox<String> comboSubject3;
+	JComboBox<String> comboMonth;
 	private String[] header = { "Month", "Subject", "#Damaged Books" };
 	private String[] subjects = {};
 
@@ -73,7 +74,7 @@ public class DamagedBooksReport extends JPanel {
 				"Aug", "Sep", "Oct", "Nov", "Dec" };
 
 
-		JComboBox comboMonth = new JComboBox(months);
+		comboMonth = new JComboBox<String>(months);
 		GridBagConstraints gbc_comboMonth = new GridBagConstraints();
 		gbc_comboMonth.insets = new Insets(0, 0, 5, 5);
 		gbc_comboMonth.fill = GridBagConstraints.HORIZONTAL;
@@ -170,10 +171,10 @@ public class DamagedBooksReport extends JPanel {
 				DBdriver db = new DBdriver();
 				
 				System.out.println("Show Report");
-				String subject1 = ""; 
-				String subject2 = "";
-				String subject3 = "";
-				String month = "";
+				String subject1 = comboSubject1.getSelectedItem().toString(); 
+				String subject2 = comboSubject2.getSelectedItem().toString();
+				String subject3 = comboSubject3.getSelectedItem().toString();
+				String month = comboMonth.getSelectedItem().toString();
 				
 				String query = String.format("SELECT EXTRACT(MONTH FROM i.est_return_date), "
 						+ "b.sname, COUNT(b.sname) "
@@ -181,18 +182,19 @@ public class DamagedBooksReport extends JPanel {
 						+ "WHERE (b.sname = \'%s\' OR b.sname = \'%s\' "
 						+ "OR b.sname = \'%s\') "
 						+ "AND (b.isbn = i.co_book_isbn AND i.co_book_isbn = c.book_isbn) "
-						+ "AND c.is_damaged = TRUE AND MONTH(i.est_return_date) = \'%s\'"
+						+ "AND c.is_damaged = TRUE AND MONTH(i.est_return_date) = \'%s\' "
 						+ "GROUP BY b.sname", subject1, subject2, subject3, month);
 				
 				System.out.println("Actual query: " + query);
 				
 				ResultSet rs = db.sendQuery(query);
-				
-				ArrayList resValues = new ArrayList();
-				
+
+				ArrayList<String> resValues = new ArrayList<String>();
+
 				try {
 					while(rs.next()){
-						resValues.add(rs.getString("sname"));
+						//resValues.add(rs.getString("sname"));
+						resValues.add("first value");
 						resValues.add("Second Value");
 						resValues.add("Third Value");
 					}
@@ -201,9 +203,15 @@ public class DamagedBooksReport extends JPanel {
 					for(int i=0; i<resValues.size(); i++){
 	    				results[i/3][i%3] = resValues.get(i);
 	    			}
-					model.changeData(header, results);
 					
-				} catch(SQLException sqle){
+					if(resValues.size() > 0) {
+						model.changeData(header, results);
+					} else {
+						System.out.println("Empty result set");
+					}
+					
+				} catch(Exception sqle){
+					System.out.println("Error while processing results;");
 	    			System.out.println(sqle.getMessage());
 	    		}
 				
