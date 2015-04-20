@@ -9,6 +9,7 @@ import javax.swing.JLabel;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 
@@ -181,10 +182,19 @@ public class ExtensionRequest extends JPanel {
         gbc_btnBack.gridy = 6;
         add(btnBack, gbc_btnBack);
         
+        btnSubmitIID.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	if (canExtendCheckout(txtIssueID.getText())) {
+            		populateFields(txtIssueID.getText());
+            	}
+            }
+        });
+        
         btnConfirmExtensionRequest.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	if (!hasFutureRequester(txtIssueID.getText())) {
-            		
+            	if (canExtendCheckout(txtIssueID.getText())) {
+            		extendCheckout(txtIssueID.getText());
+                	JOptionPane.showMessageDialog(null,"Your checkout has been extended!");
             	}
             }
         });
@@ -206,15 +216,51 @@ public class ExtensionRequest extends JPanel {
     	ResultSet result = db.sendQuery(query);
     	try {
 			if (result.next()) {
-				hasFutureReq = result.getBoolean(1);
-				overExtLimit = containedIn.getCurrentUserType()=="Student" ? result.getInt(2)>2:result.getInt(2)>5;
+				hasFutureReq = !result.getBoolean(1);
+				overExtLimit = containedIn.getUserType().equals("student") ? result.getInt(2)>2:result.getInt(2)>5;
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     	db.closeConnection();
-    	return hasFutureReq;
+    	String errMsg = "";
+    	if (hasFutureReq) {
+    		errMsg += "Another user has placed a future hold request on this book.\n";
+    	}
+    	if (overExtLimit) {
+    		errMsg += "You have reached the maximum number of extensions for this checkout.\n";
+    	}
+    	if (overExtLimit || hasFutureReq) {
+    		errMsg += "Your checkout cannot be extended.";
+    	}
+    	if (!errMsg.equals("")) {
+    		JOptionPane.showMessageDialog(null,errMsg);
+    	}
+    	return !(hasFutureReq || overExtLimit);
+    }
+    
+    public void populateFields(String issueID) {
+    	String query = String.format("SELECT est_return_date,date_created,extension_req_date,DATE(DATE_ADD(NOW(), INTERVAL 14 DAY)),DATE(NOW()),extension_req_date IS NULL FROM ISSUE WHERE issue_id=\"%s\"",issueID);
+    	DBdriver db = new DBdriver();
+    	ResultSet result = db.sendQuery(query);
+    	try {
+			if (result.next()) {
+				txtOrigionalcheckoutdate.setText(result.getString(2));
+				txtCurrentReturnDate.setText(result.getString(1));
+				if (!result.getBoolean(6)) {
+					txtCurrentextensiondate.setText(result.getString(3));
+				}
+				else {
+					txtCurrentextensiondate.setText("N/A");
+				}
+				txtNewEstimatedReturnDate.setText(result.getString(4));
+				txtNewExtensionDate.setText(result.getString(5));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
     
     public void extendCheckout(String issueID) {
