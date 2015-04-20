@@ -199,6 +199,8 @@ public class TrackBookLocation extends JPanel {
 			e.printStackTrace();
 		}
     	
+    	db.closeConnection();
+    	
     }
 
 }
