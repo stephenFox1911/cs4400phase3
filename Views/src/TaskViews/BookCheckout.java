@@ -198,10 +198,12 @@ public class BookCheckout extends JPanel {
         		if (textISBN.getText().length() == 0){
         			JOptionPane.showMessageDialog(null, "Please Check if a hold exsists.", "Did not check." , JOptionPane.INFORMATION_MESSAGE);
         		} else {
-        			
+        			System.out.println('1');
         			String querry1 = "DELETE FROM ISSUE WHERE issue_id = %s AND co_book_isbn = %s;";
-        			String querry2 = "INSERT INTO ISSUE (est_return_date, date_created, co_username, co_book_copy, co_book_isbn) "
-        					+ "VALUES (DATE_ADD(CURDATE(), INTERVAL 14 day), CURDATE(), %s, %s, %s);" ;
+        			System.out.println('2');
+        			String querry2 = "INSERT INTO ISSUE (est_return_date, date_created, co_username, co_bcopy_no, co_book_isbn) "
+        					+ "VALUES (DATE_ADD(CURDATE(), INTERVAL 14 day), CURDATE(), '%s', %s, %s);" ;
+        			System.out.println('3');
         			String querry3 = "UPDATE COPY SET is_checked_out = TRUE WHERE copy_number = %s AND book_isbn = %s;";
 
         			DBdriver db = new DBdriver();
@@ -215,8 +217,9 @@ public class BookCheckout extends JPanel {
        					
         				System.out.println(String.format(querry1, currentInfoFor, textISBN.getText()));
         				
-        				System.out.println(String.format(querry2 + querry3, textUsername.getText(),
-        							textCopyno.getText(), textISBN.getText(),textCopyno.getText(),textISBN.getText()));
+        				System.out.println(String.format(querry2, textUsername.getText(),
+        							textCopyno.getText(), textISBN.getText()));
+        				System.out.println(String.format(querry3, textCopyno.getText(),textISBN.getText()));
         				
         					JOptionPane.showMessageDialog(null, "Book Checked out.", "Book Checked Out." , JOptionPane.INFORMATION_MESSAGE);
         					
