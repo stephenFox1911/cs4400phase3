@@ -225,4 +225,10 @@ public class Holds extends JPanel {
     	System.out.println(selected[4]);
     	System.out.println(selected[5]);
     }
+    
+    public void setDate(String[] dates){
+    	textHoldRequestDate.setText(dates[0]);
+    	textEstReturnDate.setText(dates[1]);
+    	txtNextAvailable.setText(dates[2]);
+    }
 }

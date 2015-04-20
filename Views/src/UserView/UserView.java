@@ -5,6 +5,7 @@ import java.awt.CardLayout;
 import javax.swing.JPanel;
 
 import main.MainFrame;
+import DBdriver.DBdriver;
 import TaskViews.*;
 
 
@@ -110,8 +111,10 @@ public class UserView extends JPanel {
      * 
      * @param selectedItem
      */
-    public void showHoldScreen(Object[] selectedItem) {
+    public void showHoldScreen(Object[] selectedItem, String[] dates) {
+    	holdsNow.setDate(dates);	
         holdsNow.setData(selectedItem);
+        
         MainFrame.resize(576,300);
         layout.show(this, "holdNow");
 
