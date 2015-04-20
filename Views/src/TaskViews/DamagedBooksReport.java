@@ -24,6 +24,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.ScrollPane;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class DamagedBooksReport extends JPanel {
@@ -33,7 +34,7 @@ public class DamagedBooksReport extends JPanel {
 	JComboBox<String> comboSubject1;
 	JComboBox<String> comboSubject2;
 	JComboBox<String> comboSubject3;
-	private String[] header = { "Month", "Subject", "#damaged Books" };
+	private String[] header = { "Month", "Subject", "#Damaged Books" };
 	private String[] subjects = {};
 
 	/**
@@ -161,6 +162,52 @@ public class DamagedBooksReport extends JPanel {
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				containedIn.showBookSearch();
+			}
+		});
+		
+		btnShowReport.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				DBdriver db = new DBdriver();
+				
+				System.out.println("Show Report");
+				String subject1 = ""; 
+				String subject2 = "";
+				String subject3 = "";
+				String month = "";
+				
+				String query = String.format("SELECT EXTRACT(MONTH FROM i.est_return_date), "
+						+ "b.sname, COUNT(b.sname) "
+						+ "FROM COPY AS c,  ISSUE AS i, BOOK AS b "
+						+ "WHERE (b.sname = \'%s\' OR b.sname = \'%s\' "
+						+ "OR b.sname = \'%s\') "
+						+ "AND (b.isbn = i.co_book_isbn AND i.co_book_isbn = c.book_isbn) "
+						+ "AND c.is_damaged = TRUE AND MONTH(i.est_return_date) = \'%s\'"
+						+ "GROUP BY b.sname", subject1, subject2, subject3, month);
+				
+				System.out.println("Actual query: " + query);
+				
+				ResultSet rs = db.sendQuery(query);
+				
+				ArrayList resValues = new ArrayList();
+				
+				try {
+					while(rs.next()){
+						resValues.add(rs.getString("sname"));
+						resValues.add("Second Value");
+						resValues.add("Third Value");
+					}
+					Object[][] results = new Object[(resValues.size()/3)+1][3];
+					
+					for(int i=0; i<resValues.size(); i++){
+	    				results[i/3][i%3] = resValues.get(i);
+	    			}
+					model.changeData(header, results);
+					
+				} catch(SQLException sqle){
+	    			System.out.println(sqle.getMessage());
+	    		}
+				
+				db.closeConnection();
 			}
 		});
 
