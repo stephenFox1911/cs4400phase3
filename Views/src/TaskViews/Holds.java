@@ -206,9 +206,12 @@ public class Holds extends JPanel {
 					String query4 = String.format("INSERT INTO ISSUE (est_return_date, date_created, co_username, co_bcopy_no, co_book_isbn, extension_count) VALUES (DATE_ADD(NOW(), INTERVAL 17 DAY), NOW(),\"%s\",\"%s\",\"%s\", 0)",containedIn.getCurrentUser(),minCopyNo,selected[2]);
 					db.sendUpdate(query4);
 					
+					String query5 = String.format("SELECT issue_id FROM ISSUE WHERE co_username=\"%s\" AND co_book_isbn=\"%s\" AND co_bcopy_no=\"%s\"",containedIn.getCurrentUser(),selected[2],minCopyNo);
+					ResultSet result5 = db.sendQuery(query5);
+					result5.next();
 					textEstReturnDate.setText(expRetDate);
 					textHoldRequestDate.setText(holdReqDate);
-					JOptionPane.showMessageDialog(this,"Hold successfully created.");
+					JOptionPane.showMessageDialog(this,"Hold successfully created.\n Your issue ID is: "+result5.getString(1));
 				}
 				else if (!result1.getBoolean(1)) {
 					JOptionPane.showMessageDialog(this,"All copies of this book are currently on hold or checked out.");
