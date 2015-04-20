@@ -69,6 +69,10 @@ public class UserView extends JPanel {
 
     }
     
+    public String getCurrentUserType(){
+    	return userType;
+    }
+    
     public DamagedBooksReport getDamageReport(){
     	return damageReport;
     }
@@ -126,6 +130,7 @@ public class UserView extends JPanel {
 
     public void setAndShowType(String type) {
         userType = type;
+        
         bookSearch.setType(userType);
         layout.show(this, "bookSearch");
 
