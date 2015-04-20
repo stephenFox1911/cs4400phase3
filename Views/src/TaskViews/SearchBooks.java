@@ -199,7 +199,7 @@ public class SearchBooks extends JPanel {
 		+ "(SELECT COPY.book_isbn AS book_isbn, COUNT(DISTINCT COPY.copy_number) "
 		+ "AS copy_count "
 		+ "FROM COPY "
-		+ "WHERE COPY.is_checked_out=FALSE "
+		+ "WHERE COPY.is_checked_out = FALSE "
 		+ "AND COPY.is_damaged=FALSE GROUP BY COPY.book_isbn) TEMP "
 		+ "ON BOOK.isbn=TEMP.book_isbn "
 		+ "WHERE ";
@@ -213,8 +213,8 @@ public class SearchBooks extends JPanel {
     			ArrayList resValues = new ArrayList();
     			while(rs.next()){
     				resValues.add(new Boolean(false));
-    				resValues.add(rs.getString("title"));
     				resValues.add(rs.getString("isbn"));
+    				resValues.add(rs.getString("title"));
     				resValues.add(rs.getString("edition"));
     				resValues.add(rs.getString("copy_count"));
     				if(rs.getInt("on_reserve") == 1) {

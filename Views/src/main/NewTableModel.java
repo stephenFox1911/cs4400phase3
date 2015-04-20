@@ -1,5 +1,6 @@
 package main;
 
+import javax.swing.JPanel;
 import javax.swing.table.AbstractTableModel;
 /**
  * Used on jtables
@@ -49,13 +50,18 @@ public class NewTableModel extends AbstractTableModel {
                 data[a][0] = true;
             } else {
                 data[a][0] = false;
+                
             }
             this.fireTableCellUpdated(a, b);
+            
+            
+            
+            
         }
 
     }
     
-    public Object[] getSelected() throws NothingSelectedException{
+    public Object[] getSelected() throws NothingSelectedException {
         for (Object[] x : data){
             if ((Boolean) x[0]){
                 return x;
