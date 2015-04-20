@@ -185,8 +185,7 @@ public class Holds extends JPanel {
     }
 
     public void requestHold(Object[] selected) {
-    	String query1 = String.format("SELECT COUNT(*) > (SELECT COUNT(*) FROM COPY JOIN ISSUE ON COPY.copy_number=ISSUE.co_bcopy_no WHERE COPY.book_isbn=\"%s\") FROM COPY WHERE COPY.book_isbn=\"%s\"",selected[2],selected[2]);
-    	//TODO: fix this query i think
+    	String query1 = String.format("SELECT COUNT( * ) > ( SELECT COUNT( * ) FROM COPY JOIN ISSUE ON COPY.copy_number = ISSUE.co_bcopy_no AND COPY.book_isbn = ISSUE.co_book_isbn WHERE COPY.book_isbn = \"%s\" ) FROM COPY WHERE COPY.book_isbn = \"%s\"",selected[2],selected[2]);
     	String query2 = String.format("SELECT COUNT(*) < 1 FROM NON_STAFF_USER, ISSUE WHERE NON_STAFF_USER.username=\"%s\" AND NON_STAFF_USER.username=ISSUE.co_username AND ISSUE.co_book_isbn=\"%s\"",containedIn.getCurrentUser(),selected[2]);
     	DBdriver db = new DBdriver();
     	ResultSet result1 = db.sendQuery(query1);
@@ -197,13 +196,22 @@ public class Holds extends JPanel {
 				System.out.println(result2.getBoolean(1));
 				if (result1.getBoolean(1)&&result2.getBoolean(1)) {
 					//Get smallest copy # which is available for checkout
-					String query3 = String.format("SELECT MIN(COPY.copy_number) FROM COPY WHERE COPY.book_isbn=\"%s\" AND COPY.copy_number NOT IN (SELECT COPY.copy_number FROM COPY,ISSUE WHERE COPY.book_isbn=\"%s\" AND COPY.copy_number=ISSUE.co_bcopy_no)",selected[2],selected[2]);
+					String query3 = String.format("SELECT MIN(COPY.copy_number),DATE(DATE_ADD(NOW(), INTERVAL 17 DAY)),DATE(NOW()) FROM COPY WHERE COPY.book_isbn=\"%s\" AND COPY.copy_number NOT IN (SELECT COPY.copy_number FROM COPY,ISSUE WHERE COPY.book_isbn=\"%s\" AND COPY.copy_number=ISSUE.co_bcopy_no AND COPY.book_isbn=ISSUE.co_book_isbn)",selected[2],selected[2]);
 					ResultSet result3 = db.sendQuery(query3);
 					result3.next();
 					String minCopyNo = result3.getString(1);
-					System.out.println(minCopyNo);
+					String expRetDate = result3.getString(2);
+					String holdReqDate = result3.getString(3);
+					
 					String query4 = String.format("INSERT INTO ISSUE (est_return_date, date_created, co_username, co_bcopy_no, co_book_isbn, extension_count) VALUES (DATE_ADD(NOW(), INTERVAL 17 DAY), NOW(),\"%s\",\"%s\",\"%s\", 0)",containedIn.getCurrentUser(),minCopyNo,selected[2]);
 					db.sendUpdate(query4);
+					
+					String query5 = String.format("SELECT issue_id FROM ISSUE WHERE co_username=\"%s\" AND co_book_isbn=\"%s\" AND co_bcopy_no=\"%s\"",containedIn.getCurrentUser(),selected[2],minCopyNo);
+					ResultSet result5 = db.sendQuery(query5);
+					result5.next();
+					textEstReturnDate.setText(expRetDate);
+					textHoldRequestDate.setText(holdReqDate);
+					JOptionPane.showMessageDialog(this,"Hold successfully created.\n Your issue ID is: "+result5.getString(1));
 				}
 				else if (!result1.getBoolean(1)) {
 					JOptionPane.showMessageDialog(this,"All copies of this book are currently on hold or checked out.");
