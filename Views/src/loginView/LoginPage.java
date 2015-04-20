@@ -139,7 +139,11 @@ public class LoginPage extends JPanel {
             public void actionPerformed(ActionEvent e) {
             	//If user is non-staff
             	if(checkLogin(userNameField.getText(),passwordField.getText())==1) {
-            		MainFrame.showUserView(userNameField.getText(),passwordField.getText(),"");
+            		MainFrame.showUserView(userNameField.getText(),passwordField.getText(),"student");
+                    clearFields();
+            	}
+            	else if (checkLogin(userNameField.getText(),passwordField.getText())==3) {
+            		MainFrame.showUserView(userNameField.getText(),passwordField.getText(),"faculty");
                     clearFields();
             	}
             	//If user is staff
@@ -162,7 +166,8 @@ public class LoginPage extends JPanel {
     
     /*Checks login info, returns an int based on following:
      * 0 -> invalid login info
-     * 1 -> valid non-staff user
+     * 1 -> valid non-staff user (student)
+     * 3 -> valid non-staff user (faculty)
      * 2 -> valid staff user
     */
     public int checkLogin(String username,String password){
@@ -170,7 +175,7 @@ public class LoginPage extends JPanel {
     	DBdriver db = new DBdriver();
     	
     	//TODO: Put correct query
-    	String query1 = String.format("SELECT COUNT(*) FROM NON_STAFF_USER WHERE username=\"%s\" AND password=\"%s\"",username,password);
+    	String query1 = String.format("SELECT COUNT(*),NON_STAFF_USER.username in (SELECT student_username FROM STUDENT) FROM NON_STAFF_USER WHERE username=\"%s\" AND password=\"%s\"",username,password);
     	String query2 = String.format("SELECT COUNT(*) FROM STAFF WHERE staff_username=\"%s\" AND staff_password=\"%s\"",username,password);
     	ResultSet result1 = db.sendQuery(query1);
     	ResultSet result2 = db.sendQuery(query2);
@@ -178,7 +183,12 @@ public class LoginPage extends JPanel {
 			if(result1.next()) {
 				try {
 					if(result1.getInt(1)==1) {
-						ret = 1;
+						if(result1.getBoolean(2)) {
+							ret = 1;
+						}
+						else {
+							ret = 3;
+						}
 					}
 				}
 				catch (Exception e) {

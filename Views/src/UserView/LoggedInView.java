@@ -67,6 +67,5 @@ public class LoggedInView extends JPanel {
     }
 	public void setCurentUser(String username) {
 		userInterface.setCurrentUser(username);
-		
 	}
 }

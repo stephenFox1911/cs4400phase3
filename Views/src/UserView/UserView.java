@@ -190,4 +190,8 @@ public class UserView extends JPanel {
 	public String getCurrentUser(){
 		return userUN;
 	}
+	
+	public String getUserType(){
+		return userType;
+	}
 }
