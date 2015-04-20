@@ -11,8 +11,6 @@ import javax.swing.JLabel;
 
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import java.awt.LayoutManager;
-
 import javax.swing.JComboBox;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
@@ -22,10 +20,12 @@ import main.NewTableModel;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.ScrollPane;
 import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+
 
 public class DamagedBooksReport extends JPanel {
 	UserView containedIn;
@@ -168,13 +168,25 @@ public class DamagedBooksReport extends JPanel {
 		
 		btnShowReport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				Calendar cal = Calendar.getInstance();
+				
+				int monthInt =0;
+				try {
+					cal.setTime(new SimpleDateFormat("MMM").parse(comboMonth.getSelectedItem().toString()));
+					monthInt = cal.get(Calendar.MONTH) + 1;
+				} catch (ParseException e1) {
+					e1.printStackTrace();
+				}
+				
+				System.out.println(monthInt);
 				DBdriver db = new DBdriver();
 				
 				System.out.println("Show Report");
 				String subject1 = comboSubject1.getSelectedItem().toString(); 
 				String subject2 = comboSubject2.getSelectedItem().toString();
 				String subject3 = comboSubject3.getSelectedItem().toString();
-				String month = comboMonth.getSelectedItem().toString();
+				//String month = comboMonth.getSelectedItem().toString();
 				
 				String query = String.format("SELECT EXTRACT(MONTH FROM i.est_return_date), "
 						+ "b.sname, COUNT(b.sname) "
@@ -182,8 +194,8 @@ public class DamagedBooksReport extends JPanel {
 						+ "WHERE (b.sname = \'%s\' OR b.sname = \'%s\' "
 						+ "OR b.sname = \'%s\') "
 						+ "AND (b.isbn = i.co_book_isbn AND i.co_book_isbn = c.book_isbn) "
-						+ "AND c.is_damaged = TRUE AND MONTH(i.est_return_date) = \'%s\' "
-						+ "GROUP BY b.sname", subject1, subject2, subject3, month);
+						+ "AND c.is_damaged = TRUE AND MONTH(i.est_return_date) = %s "
+						+ "GROUP BY b.sname", subject1, subject2, subject3, monthInt);
 				
 				System.out.println("Actual query: " + query);
 				
@@ -194,9 +206,9 @@ public class DamagedBooksReport extends JPanel {
 				try {
 					while(rs.next()){
 						//resValues.add(rs.getString("sname"));
-						resValues.add("first value");
-						resValues.add("Second Value");
-						resValues.add("Third Value");
+						resValues.add(rs.getString(1));
+						resValues.add(rs.getString(2));
+						resValues.add(rs.getString(3));
 					}
 					Object[][] results = new Object[(resValues.size()/3)+1][3];
 					
