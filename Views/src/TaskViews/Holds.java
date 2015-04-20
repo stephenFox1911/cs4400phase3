@@ -7,6 +7,7 @@ import main.NothingSelectedException;
 
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
+import java.awt.HeadlessException;
 import java.awt.Insets;
 
 import javax.swing.JTable;
@@ -24,6 +25,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class Holds extends JPanel {
     private JTable table;
@@ -183,20 +185,40 @@ public class Holds extends JPanel {
     }
 
     public void requestHold(Object[] selected) {
-    	String query1 = String.format("SELECT COUNT(*) < (SELECT COUNT(*) FROM COPY WHERE COPY.book_isbn=\"%s\") FROM COPY, ISSUE WHERE COPY.book_isbn=\"%s\" AND COPY.book_isbn=ISSUE.co_book_isbn",selected[2],selected[2]);
-    	String query2 = String.format("SELECT COUNT(*) < 1 FROM NON_STAFF_USER, ISSUE WHERE NON_STAFF_USER.usernname=\"%s\" AND NON_STAFF_USER.username=ISSUE.co_username AND ISSUE.co_book_isbn=\"%s\"",containedIn.getCurrentUser(),selected[2]);
+    	String query1 = String.format("SELECT COUNT(*) > (SELECT COUNT(*) FROM COPY JOIN ISSUE ON COPY.copy_number=ISSUE.co_bcopy_no WHERE COPY.book_isbn=\"%s\") FROM COPY WHERE COPY.book_isbn=\"%s\"",selected[2],selected[2]);
+    	//TODO: fix this query i think
+    	String query2 = String.format("SELECT COUNT(*) < 1 FROM NON_STAFF_USER, ISSUE WHERE NON_STAFF_USER.username=\"%s\" AND NON_STAFF_USER.username=ISSUE.co_username AND ISSUE.co_book_isbn=\"%s\"",containedIn.getCurrentUser(),selected[2]);
     	DBdriver db = new DBdriver();
     	ResultSet result1 = db.sendQuery(query1);
     	ResultSet result2 = db.sendQuery(query2);
-    	if (result1.next()&&result2.next()) {
-    		if (result1.getBoolean(1)&&result2.getBoolean(1)) {
-    			String query3 = String.format("INSERT INTO ISSUE (est_return_date, date_created, co_username, co_bcopy_no, co_book_isbn, extension_count) VALUES (DATE_ADD(NOW(), INTEVAL 17 DAY), NOW(),\"%s\",\"%s\",\"%s\", 0)",containedIn.getCurrentUser(),selected[4],selected[2]);
-    			db.sendUpdate(query3);
-    		}
-    		else {
-    			JOptionPane.showMessageDialog(this,"All copies of this book are currently on hold or checked out.");
-    		}
-    	}
+    	try {
+			if (result1.next()&&result2.next()) {
+				System.out.println(result1.getBoolean(1));
+				System.out.println(result2.getBoolean(1));
+				if (result1.getBoolean(1)&&result2.getBoolean(1)) {
+					//Get smallest copy # which is available for checkout
+					String query3 = String.format("SELECT MIN(COPY.copy_number) FROM COPY WHERE COPY.book_isbn=\"%s\" AND COPY.copy_number NOT IN (SELECT COPY.copy_number FROM COPY,ISSUE WHERE COPY.book_isbn=\"%s\" AND COPY.copy_number=ISSUE.co_bcopy_no)",selected[2],selected[2]);
+					ResultSet result3 = db.sendQuery(query3);
+					result3.next();
+					String minCopyNo = result3.getString(1);
+					System.out.println(minCopyNo);
+					String query4 = String.format("INSERT INTO ISSUE (est_return_date, date_created, co_username, co_bcopy_no, co_book_isbn, extension_count) VALUES (DATE_ADD(NOW(), INTERVAL 17 DAY), NOW(),\"%s\",\"%s\",\"%s\", 0)",containedIn.getCurrentUser(),minCopyNo,selected[2]);
+					db.sendUpdate(query4);
+				}
+				else if (!result1.getBoolean(1)) {
+					JOptionPane.showMessageDialog(this,"All copies of this book are currently on hold or checked out.");
+				}
+				else {
+					JOptionPane.showMessageDialog(this,"You already have a copy of this book on hold.");
+				}
+			}
+		} catch (HeadlessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     	System.out.println(selected[1]);
     	System.out.println(selected[2]);
     	System.out.println(selected[3]);
