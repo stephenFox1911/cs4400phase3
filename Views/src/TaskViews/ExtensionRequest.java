@@ -12,7 +12,12 @@ import java.awt.Insets;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import DBdriver.DBdriver;
 import UserView.UserView;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -176,12 +181,46 @@ public class ExtensionRequest extends JPanel {
         gbc_btnBack.gridy = 6;
         add(btnBack, gbc_btnBack);
         
+        btnConfirmExtensionRequest.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	if (!hasFutureRequester(txtIssueID.getText())) {
+            		
+            	}
+            }
+        });
+
+        
         btnBack.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	containedIn.showBookSearch();
             }
         });
 
+    }
+    
+    public boolean canExtendCheckout(String issueID) {
+    	String query = String.format("SELECT COPY.future_requester IS NULL,ISSUE.extension_count FROM ISSUE,COPY WHERE ISSUE.co_book_isbn=COPY.book_isbn AND ISSUE.co_bcopy_no=COPY.copy_number AND issue_id=\"%s\" AND co_username=\"%s\"",issueID,containedIn.getCurrentUser());
+    	boolean hasFutureReq = false;
+    	boolean overExtLimit = false;
+    	DBdriver db = new DBdriver();
+    	ResultSet result = db.sendQuery(query);
+    	try {
+			if (result.next()) {
+				hasFutureReq = result.getBoolean(1);
+				overExtLimit = containedIn.getCurrentUserType()=="Student" ? result.getInt(2)>2:result.getInt(2)>5;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	db.closeConnection();
+    	return hasFutureReq;
+    }
+    
+    public void extendCheckout(String issueID) {
+    	String query = String.format("UPDATE ISSUE SET extension_req_date = DATE(NOW()), extension_count = extension_count + 1, est_return_date = DATE(DATE_ADD(NOW(), INTERVAL 14 DAY)) WHERE ((co_username IN (SELECT student_username FROM STUDENT) AND ISSUE.extension_count < 2) OR ((co_username IN (SELECT faculty_username FROM FACULTY)) AND ISSUE.extension_count < 5))  AND ISSUE.issue_id=\"%s\"",issueID);
+    	DBdriver db = new DBdriver();
+    	db.sendUpdate(query);
     }
 
 }
