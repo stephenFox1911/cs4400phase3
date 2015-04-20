@@ -13,8 +13,14 @@ import javax.swing.JTable;
 
 
 
+
+
+
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+
+
+
 
 
 
@@ -23,10 +29,12 @@ import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import DBdriver.DBdriver;
 import UserView.UserView;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.sql.ResultSet;
 
 public class SearchResults extends JPanel {
     private String[] header = {"Select", "ISBN", "Title of Book", "Edition",
@@ -107,7 +115,54 @@ public class SearchResults extends JPanel {
                     Object[] selected = tableModel.getSelected();
                     // if there is no copy available, switch to future hold screen
                     if(selected[5].equals("No")) {
-                    	containedIn.showHoldScreen(selected);
+                    	
+                    	
+                    	String[] dates = new String[3];
+                    	DBdriver db = new DBdriver();
+                    	
+                        String query1 = "SELECT CURDATE(), DATE_ADD(CURDATE(), INTERVAL 17 DAY) "
+                        		+ "FROM ISSUE;";
+                        
+                        String query2 = "SELECT est_return_date FROM ISSUE "
+                        		+ "WHERE (co_book_isbn = %s) "
+                        		+ "ORDER BY est_return_date "
+                        		+ "LIMIT 1;";
+                        
+                        ResultSet estReturn;
+                        ResultSet estAvailibility;
+                        
+                        if (((String)selected[5]).equals("0")) {
+                        	estAvailibility = db.sendQuery(String.format(query2, (String) selected[2]));
+                        	try{
+                        		estAvailibility.next();
+                        		dates[0] = "N/A";
+                        		dates[1] = "N/A";
+                        		dates[2] = estAvailibility.getString(1);
+                        	} catch (Exception e) {
+                        		e.printStackTrace();
+                        	}
+                        } else {
+                        	
+                        	try{
+                        		estReturn = db.sendQuery(query1);
+                        		
+                        		estReturn.next();
+                        		dates[0] = estReturn.getString(1);
+                        		dates[1] = estReturn.getString(2);
+                        		dates[2] = "N/A";
+                        		
+                        	} catch (Exception e) {
+                        		e.printStackTrace();
+                        	}
+                        	containedIn.showHoldScreen(selected, dates);
+                        	
+                        }
+                        
+                        
+                        db.closeConnection();
+                    	
+                    	
+                    	
                     } else {
                     	JOptionPane.showMessageDialog(null, "Book is on Reserve");
                     }
@@ -115,6 +170,8 @@ public class SearchResults extends JPanel {
                     
                     JOptionPane.showMessageDialog(null, e.getMessage(), "Book not selected" , JOptionPane.INFORMATION_MESSAGE);
                 }
+                
+                
                 
             }
         });
@@ -130,6 +187,7 @@ public class SearchResults extends JPanel {
         // searchTable.setFillsViewportHeight(true);
 
     }
+    
 
     /**
      * Will instantiate a new table object

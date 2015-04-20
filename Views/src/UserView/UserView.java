@@ -5,6 +5,7 @@ import java.awt.CardLayout;
 import javax.swing.JPanel;
 
 import main.MainFrame;
+import DBdriver.DBdriver;
 import TaskViews.*;
 
 
@@ -68,6 +69,10 @@ public class UserView extends JPanel {
 
     }
     
+    public String getCurrentUserType(){
+    	return userType;
+    }
+    
     public DamagedBooksReport getDamageReport(){
     	return damageReport;
     }
@@ -110,8 +115,10 @@ public class UserView extends JPanel {
      * 
      * @param selectedItem
      */
-    public void showHoldScreen(Object[] selectedItem) {
+    public void showHoldScreen(Object[] selectedItem, String[] dates) {
+    	holdsNow.setDate(dates);	
         holdsNow.setData(selectedItem);
+        
         MainFrame.resize(576,300);
         layout.show(this, "holdNow");
 
@@ -123,6 +130,7 @@ public class UserView extends JPanel {
 
     public void setAndShowType(String type) {
         userType = type;
+        
         bookSearch.setType(userType);
         layout.show(this, "bookSearch");
 
