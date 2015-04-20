@@ -41,8 +41,6 @@ public class Holds extends JPanel {
     private JLabel lblEstimatedReturnDate;
     private JTextField textEstReturnDate;
     private JButton btnBack;
-    private JLabel lblNextAvailable;
-    private JTextField txtNextAvailable;
 
     /**
      * Create the panel.
@@ -137,24 +135,6 @@ public class Holds extends JPanel {
                 containedIn.showSearchResults();
             }
         });
-        
-        lblNextAvailable = new JLabel("Next Available: ");
-        GridBagConstraints gbc_lblNextAvailable = new GridBagConstraints();
-        gbc_lblNextAvailable.anchor = GridBagConstraints.EAST;
-        gbc_lblNextAvailable.insets = new Insets(0, 0, 0, 5);
-        gbc_lblNextAvailable.gridx = 1;
-        gbc_lblNextAvailable.gridy = 4;
-        add(lblNextAvailable, gbc_lblNextAvailable);
-        
-        txtNextAvailable = new JTextField();
-        txtNextAvailable.setText("MM/DD/YYYY");
-        GridBagConstraints gbc_txtNextAvailable = new GridBagConstraints();
-        gbc_txtNextAvailable.insets = new Insets(0, 0, 0, 5);
-        gbc_txtNextAvailable.fill = GridBagConstraints.HORIZONTAL;
-        gbc_txtNextAvailable.gridx = 2;
-        gbc_txtNextAvailable.gridy = 4;
-        add(txtNextAvailable, gbc_txtNextAvailable);
-        txtNextAvailable.setColumns(10);
         GridBagConstraints gbc_btnBack = new GridBagConstraints();
         gbc_btnBack.fill = GridBagConstraints.HORIZONTAL;
         gbc_btnBack.insets = new Insets(0, 0, 0, 5);
@@ -237,6 +217,5 @@ public class Holds extends JPanel {
     public void setDate(String[] dates){
     	textHoldRequestDate.setText(dates[0]);
     	textEstReturnDate.setText(dates[1]);
-    	txtNextAvailable.setText(dates[2]);
     }
 }
