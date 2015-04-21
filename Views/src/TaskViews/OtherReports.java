@@ -88,62 +88,43 @@ public class OtherReports extends JPanel {
     
     public void fillTable(String type) {
     	DBdriver db = new DBdriver();
-    	String janQuery, febQuery;
+    	String query;
 
     	if(type.equals("Popular Subjects")) {
-    		janQuery = "SELECT sname, COUNT(DISTINCT issue_id) "
-    					+ "FROM ISSUE INNER JOIN BOOK ON co_book_isbn=isbn "
-    					+ "WHERE MONTH(date_created)='1' "
-    					+ "GROUP BY sname "
-    					+ "ORDER BY COUNT(DISTINCT issue_id) DESC "
-    					+ "LIMIT 3;";
-    		
-    		febQuery = "SELECT sname, COUNT(DISTINCT issue_id) "
-					+ "FROM ISSUE INNER JOIN BOOK ON co_book_isbn=isbn "
-					+ "WHERE MONTH(date_created)='2' "
-					+ "GROUP BY sname "
-					+ "ORDER BY COUNT(DISTINCT issue_id) DESC "
-					+ "LIMIT 3;";
+    		query = "SELECT MONTH(date_created),sname, COUNT(DISTINCT issue_id) "
+    				+ "FROM ISSUE INNER JOIN BOOK ON co_book_isbn=isbn "
+    				+ "WHERE MONTH(date_created)=4 OR MONTH(date_created)=5 "
+    				+ "GROUP BY MONTH(date_created),sname "
+    				+ "ORDER BY MONTH(date_created),COUNT(DISTINCT issue_id) DESC LIMIT 3";
     		
     	} else if(type.equals("Frequent Users")) {
-    		janQuery = "SELECT date_created, username, count "
-    				+ "FROM (SELECT DISTINCT EXTRACT(MONTH FROM date_created), "
-    				+ "username,  count(co_username) AS   count, RANK() "
-    				+ "OVER (PARTITION BY MONTH(date_created) ORDER BY count DESC) AS rank "
-    				+ "From (NON_STAFF_USER JOIN ISSUE on username = co_username) "
-    				+ "WHERE (MONTH(date_created) = ‘1’ or  MONTH(date_created) = ‘2’)  AND count > 10); "
-    				+ "WHERE rank <=5 ORDER BY date_created, title";
+    		query = "SELECT MONTH(date_created),username, COUNT(DISTINCT issue_id) "
+    				+ "FROM ISSUE INNER JOIN NON_STAFF_USER ON co_username=username "
+    				+ "WHERE MONTH(date_created)=4 OR MONTH(date_created)=5 "
+    				+ "GROUP BY MONTH(date_created),username "
+    				+ "ORDER BY MONTH(date_created),COUNT(DISTINCT issue_id) DESC LIMIT 5";
     		
     	} else if(type.equals("Popular Books")) {
-    		janQuery = "SELECT EXTRACT(MONTH FROM(date_created)), title, count "
-    				+ "FROM (SELECT  DISTINCT EXTRACT(MONTH FROM date_created), "
-    				+ "title,  count(co_book_isbn) AS count, RANK() "
-    				+ "OVER (PARTITION BY MONTH(date_created) ORDER BY count DESC) AS rank "
-    				+ "FROM (BOOK JOIN ISSUE on isbn = co_book_isbn) "
-    				+ "WHERE MONTH(date_created) = ‘1’ or  MONTH(date_created) = ‘2’) "
-    				+ "WHERE rank <=3 ORDER BY date_created, title";
+    		query = "SELECT MONTH(date_created),title, COUNT(DISTINCT issue_id) "
+    				+ "FROM ISSUE INNER JOIN BOOK ON co_book_isbn=isbn "
+    				+ "WHERE MONTH(date_created)=4 OR MONTH(date_created)=5 "
+    				+ "GROUP BY MONTH(date_created),title "
+    				+ "ORDER BY MONTH(date_created),COUNT(DISTINCT issue_id) DESC LIMIT 3";
     	} else {
     		System.out.println("Invalid Type");
     		return;
     	}
     	
-    	System.out.println("Actual query: " + janQuery);
-    	ResultSet rs = db.sendQuery(janQuery);
+    	System.out.println("Actual query: " + query);
+    	ResultSet rs = db.sendQuery(query);
 		ArrayList<String> resValues = new ArrayList<String>();
 		
 		try {
-			//while(rs.next()){
-				//test values
-				resValues.add("first value");
-				resValues.add("Second Value");
-				resValues.add("Third Value");
-				//actual values
-				/*
-				resValues.add(rs.getString(1));
-				resValues.add(rs.getString(2));
-				resValues.add(rs.getString(3));
-				*/
-			//}
+			while(rs.next()){
+					resValues.add(rs.getString(1));
+					resValues.add(rs.getString(2));
+					resValues.add(rs.getString(3));
+			}
 			Object[][] results = new Object[(resValues.size()/3)+1][3];
 			
 			for(int i=0; i<resValues.size(); i++){
