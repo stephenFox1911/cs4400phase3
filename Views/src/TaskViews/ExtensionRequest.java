@@ -217,7 +217,7 @@ public class ExtensionRequest extends JPanel {
     	try {
 			if (result.next()) {
 				hasFutureReq = !result.getBoolean(1);
-				overExtLimit = containedIn.getUserType().equals("student") ? result.getInt(2)>2:result.getInt(2)>5;
+				overExtLimit = containedIn.getUserType().equals("student") ? result.getInt(2)>=2:result.getInt(2)>=5;
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
