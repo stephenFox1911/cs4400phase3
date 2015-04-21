@@ -169,7 +169,7 @@ public class Holds extends JPanel {
     			+ "FROM COPY JOIN ISSUE ON COPY.copy_number = ISSUE.co_bcopy_no "
     			+ "AND COPY.book_isbn = ISSUE.co_book_isbn WHERE COPY.book_isbn = \"%s\" ) "
     			, selected[2]);
-    	String query2 = String.format("SELECT COUNT(*) < 1 FROM ISSUE WHERE ISSUE.co_username = \"%s\" AND ISSUE.co_book_isbn = \"%s\""
+    	String query2 = String.format("SELECT COUNT(*) < 1 FROM ISSUE,COPY WHERE ISSUE.co_username = \"%s\" AND ISSUE.co_book_isbn = \"%s\" AND (COPY.is_checked_out=1 OR COPY.is_on_hold=1) AND COPY.book_isbn=ISSUE.co_book_isbn AND ISSUE.est_return_date>DATE(NOW())"
     			, containedIn.getCurrentUser(), selected[1]);
     	DBdriver db = new DBdriver();
     	ResultSet result1 = db.sendQuery(query1);

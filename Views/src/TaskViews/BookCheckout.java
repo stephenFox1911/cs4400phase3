@@ -196,7 +196,7 @@ public class BookCheckout extends JPanel {
         	public void actionPerformed(ActionEvent arg0) {
         		
         		if (textISBN.getText().length() == 0){
-        			JOptionPane.showMessageDialog(null, "Please Check if a hold exsists.", "Did not check." , JOptionPane.INFORMATION_MESSAGE);
+        			JOptionPane.showMessageDialog(null, "Please Check if a hold exists.", "Did not check." , JOptionPane.INFORMATION_MESSAGE);
         		} else {
         			System.out.println('1');
         			String querry1 = "DELETE FROM ISSUE WHERE issue_id = %s AND co_book_isbn = %s;";
@@ -204,7 +204,7 @@ public class BookCheckout extends JPanel {
         			String querry2 = "INSERT INTO ISSUE (est_return_date, date_created, co_username, co_bcopy_no, co_book_isbn) "
         					+ "VALUES (DATE_ADD(CURDATE(), INTERVAL 14 day), CURDATE(), '%s', %s, %s);" ;
         			System.out.println('3');
-        			String querry3 = "UPDATE COPY SET is_checked_out = TRUE WHERE copy_number = %s AND book_isbn = %s;";
+        			String querry3 = "UPDATE COPY SET is_checked_out = TRUE,is_on_hold=FALSE WHERE copy_number = %s AND book_isbn = %s;";
 
         			DBdriver db = new DBdriver();
         			
@@ -221,14 +221,14 @@ public class BookCheckout extends JPanel {
         							textCopyno.getText(), textISBN.getText()));
         				System.out.println(String.format(querry3, textCopyno.getText(),textISBN.getText()));
         				
-        				ResultSet newID = db.sendQuery(String.format("SELECT issue_id FROM ISSUE WHERE co_username = '%s "
-        						+ "AND  co_book_isbn = %s AND co_bcopy_no = %s;", textUsername.getText()
+        				ResultSet newID = db.sendQuery(String.format("SELECT issue_id FROM ISSUE WHERE co_username = \"%s\" "
+        						+ "AND  co_book_isbn = \"%s\" AND co_bcopy_no = \"%s\";", textUsername.getText()
         						, textISBN.getText(), textCopyno.getText()));
         				newID.next();
         				JOptionPane.showMessageDialog(null, "Book Checked out with new issueID: " + newID.getString(1), "Book Checked Out." , JOptionPane.INFORMATION_MESSAGE);
         					
       				} else {
-       					JOptionPane.showMessageDialog(null, "Hold not droped.", "Hold not droped." , JOptionPane.INFORMATION_MESSAGE);
+       					JOptionPane.showMessageDialog(null, "Hold not dropped.", "Hold not dropped." , JOptionPane.INFORMATION_MESSAGE);
       				}
        				
         				
@@ -249,8 +249,8 @@ public class BookCheckout extends JPanel {
         	public void actionPerformed(ActionEvent arg0) {
         		
         		String querry1 = "SELECT co_username, co_bcopy_no, co_book_isbn "
-        				+ "FROM ISSUE WHERE issue_id = %s AND (DATEDIFF(est_return_date, date_created)) = 17;";
-        		String query2 =  "SELECT DATEDIFF(CURDATE(), date_created) <=3 FROM ISSUE WHERE issue_id = %s;";
+        				+ "FROM ISSUE,COPY WHERE issue_id = \"%s\" AND co_book_isbn=book_isbn AND is_on_hold=TRUE";
+        		String query2 =  "SELECT DATEDIFF(CURDATE(), date_created) <=3 FROM ISSUE WHERE issue_id = \"%s\";";
         		System.out.println(querry1);
         		DBdriver db = new DBdriver();
         		ResultSet test = db.sendQuery(String.format(query2, textIssueID.getText()));
@@ -267,7 +267,8 @@ public class BookCheckout extends JPanel {
         					currentInfoFor = textIssueID.getText();
         				} else {
         					db.sendUpdate(String.format("DELETE FROM ISSUE WHERE issue_id = %s", textIssueID.getText()));
-        					JOptionPane.showMessageDialog(null, "Your hold was droped because book was not picked up withing 3 days of hold.", "Hold droped." , JOptionPane.INFORMATION_MESSAGE);
+        					db.sendUpdate(String.format("UPDATE COPY SET is_on_hold=0 WHERE copy_number=\"%s\" AND book_isbn=\"%s\"",textCopyno.getText(),textISBN.getText()));
+        					JOptionPane.showMessageDialog(null, "Your hold was dropped because book was not picked up withing 3 days of hold.", "Hold droped." , JOptionPane.INFORMATION_MESSAGE);
         				}
         				
         				
