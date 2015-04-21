@@ -170,7 +170,7 @@ public class Holds extends JPanel {
     			+ "AND COPY.book_isbn = ISSUE.co_book_isbn WHERE COPY.book_isbn = \"%s\" ) "
     			, selected[2]);
     	String query2 = String.format("SELECT COUNT(*) < 1 FROM ISSUE WHERE ISSUE.co_username = \"%s\" AND ISSUE.co_book_isbn = \"%s\""
-    			, containedIn.getCurrentUser(), selected[2]);
+    			, containedIn.getCurrentUser(), selected[1]);
     	DBdriver db = new DBdriver();
     	ResultSet result1 = db.sendQuery(query1);
     	ResultSet result2 = db.sendQuery(query2);
@@ -180,27 +180,35 @@ public class Holds extends JPanel {
 				System.out.println(result2.getBoolean(1));
 				if (result1.getBoolean(1)&&result2.getBoolean(1)) {
 					//Get smallest copy # which is available for checkout
-					String query3 = String.format("SELECT MIN(COPY.copy_number),DATE(DATE_ADD(NOW(), INTERVAL 17 DAY)),"
-							+ "DATE(NOW()) FROM COPY WHERE COPY.book_isbn=\"%s\" "
-							+ "AND COPY.copy_number NOT IN (SELECT COPY.copy_number "
-							+ "FROM COPY,ISSUE WHERE COPY.book_isbn=\"%s\" "
-							+ "AND COPY.copy_number=ISSUE.co_bcopy_no "
-							+ "AND COPY.book_isbn=ISSUE.co_book_isbn)",selected[2],selected[2]);
+					System.out.println("q3");
+					String query3 = String.format("SELECT c.copy_number, DATE_ADD(CURDATE(), INTERVAL 14 DAY), CURDATE() FROM COPY as c "
+							+ "WHERE (c.is_checked_out = 0 AND c.is_damaged = 0 "
+							+ "AND  c.is_on_hold = 0 AND c.book_isbn = %s ) "
+							+ "order by c.copy_number limit 1;",selected[1]);
 					ResultSet result3 = db.sendQuery(query3);
 					result3.next();
 					String minCopyNo = result3.getString(1);
 					String expRetDate = result3.getString(2);
 					String holdReqDate = result3.getString(3);
 					
+					
+					System.out.println("q4");
 					String query4 = String.format("INSERT INTO ISSUE (est_return_date, "
 							+ "date_created, co_username, co_bcopy_no, co_book_isbn, extension_count) "
-							+ "VALUES (DATE_ADD(NOW(), INTERVAL 17 DAY), NOW(),\"%s\",\"%s\",\"%s\", 0)"
-							,containedIn.getCurrentUser(),minCopyNo,selected[2]);
+							+ "VALUES (DATE_ADD(NOW(), INTERVAL 17 DAY), NOW(), '%s', %s , '%s', 0)"
+							,containedIn.getCurrentUser(),minCopyNo,selected[1]);
 					db.sendUpdate(query4);
 					
+					String query6 = "UPDATE COPY SET is_on_hold = 1 WHERE copy_number = %s AND book_isbn = '%s';";
+					
+					db.sendUpdate(String.format(query6, minCopyNo, selected[1]));
+					
+					System.out.println("q5");
+					
 					String query5 = String.format("SELECT issue_id FROM ISSUE WHERE co_username=\"%s\" "
-							+ "AND co_book_isbn=\"%s\" AND co_bcopy_no=\"%s\""
-							,containedIn.getCurrentUser(),selected[2],minCopyNo);
+							+ "AND co_book_isbn=\"%s\" AND co_bcopy_no= %s "
+							,containedIn.getCurrentUser(), selected[1] ,minCopyNo);
+					System.out.println(query5);
 					ResultSet result5 = db.sendQuery(query5);
 					result5.next();
 					textEstReturnDate.setText(expRetDate);
