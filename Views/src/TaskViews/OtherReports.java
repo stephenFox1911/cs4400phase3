@@ -91,25 +91,43 @@ public class OtherReports extends JPanel {
     	String query;
 
     	if(type.equals("Popular Subjects")) {
-    		query = "SELECT MONTH(date_created),sname, COUNT(DISTINCT issue_id) "
-    				+ "FROM ISSUE INNER JOIN BOOK ON co_book_isbn=isbn "
-    				+ "WHERE MONTH(date_created)=4 OR MONTH(date_created)=5 "
-    				+ "GROUP BY MONTH(date_created),sname "
-    				+ "ORDER BY MONTH(date_created),COUNT(DISTINCT issue_id) DESC LIMIT 3";
+    		query = "(SELECT MONTH(date_created),sname, COUNT(DISTINCT issue_id) "
+					+ "FROM ISSUE INNER JOIN BOOK ON co_book_isbn=isbn "
+					+ "WHERE MONTH(date_created)=1 "
+					+ "GROUP BY sname "
+					+ "ORDER BY COUNT(DISTINCT issue_id) DESC LIMIT 3) "
+					+ "UNION "
+					+ "(SELECT MONTH(date_created),sname, COUNT(DISTINCT issue_id) " 
+					+ "FROM ISSUE INNER JOIN BOOK ON co_book_isbn=isbn "
+					+ "WHERE MONTH(date_created)=2 "
+					+ "GROUP BY sname "
+					+ "ORDER BY COUNT(DISTINCT issue_id) DESC LIMIT 3)";
     		
     	} else if(type.equals("Frequent Users")) {
-    		query = "SELECT MONTH(date_created),username, COUNT(DISTINCT issue_id) "
-    				+ "FROM ISSUE INNER JOIN NON_STAFF_USER ON co_username=username "
-    				+ "WHERE MONTH(date_created)=4 OR MONTH(date_created)=5 "
-    				+ "GROUP BY MONTH(date_created),username "
-    				+ "ORDER BY MONTH(date_created),COUNT(DISTINCT issue_id) DESC LIMIT 5";
+    		query = "(SELECT MONTH(date_created),username, COUNT(DISTINCT issue_id) "
+					+ "FROM ISSUE INNER JOIN NON_STAFF_USER ON co_username=username "
+					+ "WHERE MONTH(date_created)=1 "
+					+ "GROUP BY username "
+					+ "ORDER BY COUNT(DISTINCT issue_id) DESC LIMIT 5) "
+					+ "UNION "
+					+ "(SELECT MONTH(date_created),username, COUNT(DISTINCT issue_id) " 
+					+ "FROM ISSUE INNER JOIN NON_STAFF_USER ON co_username=username "
+					+ "WHERE MONTH(date_created)=2 "
+					+ "GROUP BY username "
+					+ "ORDER BY COUNT(DISTINCT issue_id) DESC LIMIT 5)";
     		
     	} else if(type.equals("Popular Books")) {
-    		query = "SELECT MONTH(date_created),title, COUNT(DISTINCT issue_id) "
-    				+ "FROM ISSUE INNER JOIN BOOK ON co_book_isbn=isbn "
-    				+ "WHERE MONTH(date_created)=4 OR MONTH(date_created)=5 "
-    				+ "GROUP BY MONTH(date_created),title "
-    				+ "ORDER BY MONTH(date_created),COUNT(DISTINCT issue_id) DESC LIMIT 3";
+    		query = "(SELECT MONTH(date_created),title, COUNT(DISTINCT issue_id) "
+					+ "FROM ISSUE INNER JOIN BOOK ON co_book_isbn=isbn "
+					+ "WHERE MONTH(date_created)=1 "
+					+ "GROUP BY title "
+					+ "ORDER BY COUNT(DISTINCT issue_id) DESC LIMIT 3) "
+					+ "UNION "
+					+ "(SELECT MONTH(date_created),title, COUNT(DISTINCT issue_id) " 
+					+ "FROM ISSUE INNER JOIN BOOK ON co_book_isbn=isbn "
+					+ "WHERE MONTH(date_created)=2 "
+					+ "GROUP BY title "
+					+ "ORDER BY COUNT(DISTINCT issue_id) DESC LIMIT 3)";
     	} else {
     		System.out.println("Invalid Type");
     		return;
@@ -121,7 +139,12 @@ public class OtherReports extends JPanel {
 		
 		try {
 			while(rs.next()){
-					resValues.add(rs.getString(1));
+					if(rs.getInt(1)==1) {
+						resValues.add("January");
+					}
+					else {
+						resValues.add("February");
+					}
 					resValues.add(rs.getString(2));
 					resValues.add(rs.getString(3));
 			}
