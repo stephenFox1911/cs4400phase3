@@ -168,9 +168,9 @@ public class Holds extends JPanel {
     	String query1 = String.format("SELECT COUNT( * ) >= ( SELECT COUNT( * ) "
     			+ "FROM COPY JOIN ISSUE ON COPY.copy_number = ISSUE.co_bcopy_no "
     			+ "AND COPY.book_isbn = ISSUE.co_book_isbn WHERE COPY.book_isbn = \"%s\" ) "
-    			, selected[1]);
-    	String query2 = String.format("SELECT COUNT(*) < 1 FROM ISSUE WHERE ISSUE.co_username = '%s' AND ISSUE.co_book_isbn = %s;"
-    			, containedIn.getCurrentUser(), selected[1]);
+    			, selected[2]);
+    	String query2 = String.format("SELECT COUNT(*) < 1 FROM ISSUE WHERE ISSUE.co_username = \"%s\" AND ISSUE.co_book_isbn = \"%s\""
+    			, containedIn.getCurrentUser(), selected[2]);
     	DBdriver db = new DBdriver();
     	ResultSet result1 = db.sendQuery(query1);
     	ResultSet result2 = db.sendQuery(query2);
@@ -185,7 +185,7 @@ public class Holds extends JPanel {
 							+ "AND COPY.copy_number NOT IN (SELECT COPY.copy_number "
 							+ "FROM COPY,ISSUE WHERE COPY.book_isbn=\"%s\" "
 							+ "AND COPY.copy_number=ISSUE.co_bcopy_no "
-							+ "AND COPY.book_isbn=ISSUE.co_book_isbn)",selected[1],selected[1]);
+							+ "AND COPY.book_isbn=ISSUE.co_book_isbn)",selected[2],selected[2]);
 					ResultSet result3 = db.sendQuery(query3);
 					result3.next();
 					String minCopyNo = result3.getString(1);
@@ -195,12 +195,12 @@ public class Holds extends JPanel {
 					String query4 = String.format("INSERT INTO ISSUE (est_return_date, "
 							+ "date_created, co_username, co_bcopy_no, co_book_isbn, extension_count) "
 							+ "VALUES (DATE_ADD(NOW(), INTERVAL 17 DAY), NOW(),\"%s\",\"%s\",\"%s\", 0)"
-							,containedIn.getCurrentUser(),minCopyNo,selected[1]);
+							,containedIn.getCurrentUser(),minCopyNo,selected[2]);
 					db.sendUpdate(query4);
 					
 					String query5 = String.format("SELECT issue_id FROM ISSUE WHERE co_username=\"%s\" "
 							+ "AND co_book_isbn=\"%s\" AND co_bcopy_no=\"%s\""
-							,containedIn.getCurrentUser(),selected[1],minCopyNo);
+							,containedIn.getCurrentUser(),selected[2],minCopyNo);
 					ResultSet result5 = db.sendQuery(query5);
 					result5.next();
 					textEstReturnDate.setText(expRetDate);
