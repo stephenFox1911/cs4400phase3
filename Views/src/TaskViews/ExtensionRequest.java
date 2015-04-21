@@ -209,7 +209,10 @@ public class ExtensionRequest extends JPanel {
     }
     
     public boolean canExtendCheckout(String issueID) {
-    	String query = String.format("SELECT COPY.future_requester IS NULL,ISSUE.extension_count FROM ISSUE,COPY WHERE ISSUE.co_book_isbn=COPY.book_isbn AND ISSUE.co_bcopy_no=COPY.copy_number AND issue_id=\"%s\" AND co_username=\"%s\"",issueID,containedIn.getCurrentUser());
+    	String query = String.format("SELECT COPY.future_requester IS NULL,ISSUE.extension_count "
+    			+ "FROM ISSUE,COPY WHERE ISSUE.co_book_isbn=COPY.book_isbn "
+    			+ "AND ISSUE.co_bcopy_no=COPY.copy_number AND issue_id=\"%s\" AND co_username=\"%s\""
+    			,issueID,containedIn.getCurrentUser());
     	boolean hasFutureReq = false;
     	boolean overExtLimit = false;
     	DBdriver db = new DBdriver();
@@ -241,7 +244,9 @@ public class ExtensionRequest extends JPanel {
     }
     
     public void populateFields(String issueID) {
-    	String query = String.format("SELECT est_return_date,date_created,extension_req_date,DATE(DATE_ADD(NOW(), INTERVAL 14 DAY)),DATE(NOW()),extension_req_date IS NULL FROM ISSUE WHERE issue_id=\"%s\"",issueID);
+    	String query = String.format("SELECT est_return_date,date_created,extension_req_date,"
+    			+ "DATE(DATE_ADD(NOW(), INTERVAL 14 DAY)),DATE(NOW()),extension_req_date IS NULL "
+    			+ "FROM ISSUE WHERE issue_id=\"%s\"",issueID);
     	DBdriver db = new DBdriver();
     	ResultSet result = db.sendQuery(query);
     	try {
@@ -264,7 +269,14 @@ public class ExtensionRequest extends JPanel {
     }
     
     public void extendCheckout(String issueID) {
-    	String query = String.format("UPDATE ISSUE SET extension_req_date = DATE(NOW()), extension_count = extension_count + 1, est_return_date = DATE(DATE_ADD(NOW(), INTERVAL 14 DAY)) WHERE ((co_username IN (SELECT student_username FROM STUDENT) AND ISSUE.extension_count < 2) OR ((co_username IN (SELECT faculty_username FROM FACULTY)) AND ISSUE.extension_count < 5))  AND ISSUE.issue_id=\"%s\"",issueID);
+    	String query = String.format("UPDATE ISSUE SET extension_req_date = DATE(NOW()), "
+    			+ "extension_count = extension_count + 1, "
+    			+ "est_return_date = DATE(DATE_ADD(NOW(), INTERVAL 14 DAY)) "
+    			+ "WHERE ((co_username NOT IN (SELECT faculty_username FROM FACULTY) "
+    			+ "AND ISSUE.extension_count < 2) "
+    			+ "OR ((co_username IN "
+    			+ "(SELECT faculty_username FROM FACULTY)) AND ISSUE.extension_count < 5)) "
+    			+ " AND ISSUE.issue_id=\"%s\"",issueID);
     	DBdriver db = new DBdriver();
     	db.sendUpdate(query);
     }

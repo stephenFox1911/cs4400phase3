@@ -140,15 +140,18 @@ public class LoginPage extends JPanel {
             	//If user is non-staff
             	if(checkLogin(userNameField.getText(),passwordField.getText())==1) {
             		MainFrame.showUserView(userNameField.getText(),passwordField.getText(),"student");
+            		System.out.println("student");
                     clearFields();
             	}
             	else if (checkLogin(userNameField.getText(),passwordField.getText())==3) {
             		MainFrame.showUserView(userNameField.getText(),passwordField.getText(),"faculty");
+            		System.out.println("fac");
                     clearFields();
             	}
             	//If user is staff
             	else if(checkLogin(userNameField.getText(),passwordField.getText())==2) {
             		MainFrame.showUserView(userNameField.getText(),passwordField.getText(),"staff");
+            		System.out.println("staff");
             		clearFields();
             		
             	}
@@ -175,7 +178,7 @@ public class LoginPage extends JPanel {
     	DBdriver db = new DBdriver();
     	
     	//TODO: Put correct query
-    	String query1 = String.format("SELECT COUNT(*),NON_STAFF_USER.username in (SELECT student_username FROM STUDENT) FROM NON_STAFF_USER WHERE username=\"%s\" AND password=\"%s\"",username,password);
+    	String query1 = String.format("SELECT COUNT(*),NON_STAFF_USER.username not in (SELECT faculty_username FROM FACULTY) FROM NON_STAFF_USER WHERE username=\"%s\" AND password=\"%s\"",username,password);
     	String query2 = String.format("SELECT COUNT(*) FROM STAFF WHERE staff_username=\"%s\" AND staff_password=\"%s\"",username,password);
     	ResultSet result1 = db.sendQuery(query1);
     	ResultSet result2 = db.sendQuery(query2);
