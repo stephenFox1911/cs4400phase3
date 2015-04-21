@@ -204,7 +204,7 @@ public class BookCheckout extends JPanel {
         			String querry2 = "INSERT INTO ISSUE (est_return_date, date_created, co_username, co_bcopy_no, co_book_isbn) "
         					+ "VALUES (DATE_ADD(CURDATE(), INTERVAL 14 day), CURDATE(), '%s', %s, %s);" ;
         			System.out.println('3');
-        			String querry3 = "UPDATE COPY SET is_checked_out = TRUE WHERE copy_number = %s AND book_isbn = %s;";
+        			String querry3 = "UPDATE COPY SET is_checked_out = TRUE, is_on_hold = 0 WHERE copy_number = %s AND book_isbn = %s;";
 
         			DBdriver db = new DBdriver();
         			
@@ -221,7 +221,7 @@ public class BookCheckout extends JPanel {
         							textCopyno.getText(), textISBN.getText()));
         				System.out.println(String.format(querry3, textCopyno.getText(),textISBN.getText()));
         				
-        				ResultSet newID = db.sendQuery(String.format("SELECT issue_id FROM ISSUE WHERE co_username = '%s "
+        				ResultSet newID = db.sendQuery(String.format("SELECT issue_id FROM ISSUE WHERE co_username = '%s' "
         						+ "AND  co_book_isbn = %s AND co_bcopy_no = %s;", textUsername.getText()
         						, textISBN.getText(), textCopyno.getText()));
         				newID.next();

@@ -208,6 +208,15 @@ public class ExtensionRequest extends JPanel {
 
     }
     
+    public void clearFields(){
+    	txtIssueID.setText("");
+    	txtOrigionalcheckoutdate.setText("");
+    	txtCurrentextensiondate.setText("");
+    	txtNewExtensionDate.setText("");
+    	txtCurrentReturnDate.setText("");
+    	txtNewEstimatedReturnDate.setText("");
+    }
+    
     public boolean canExtendCheckout(String issueID) {
     	String query = String.format("SELECT COPY.future_requester IS NULL,ISSUE.extension_count "
     			+ "FROM ISSUE,COPY WHERE ISSUE.co_book_isbn=COPY.book_isbn "
