@@ -88,19 +88,25 @@ public class OtherReports extends JPanel {
     
     public void fillTable(String type) {
     	DBdriver db = new DBdriver();
-    	String query;
+    	String janQuery, febQuery;
 
     	if(type.equals("Popular Subjects")) {
-    		query = "SELECT date_created, sname, count "
-    				+ "FROM (SELECT  DISTINCT EXTRACT(MONTH FROM date_created), "
-    				+ "sname,  count(co_book_isbn) AS count, RANK() "
-    				+ "OVER (PARTITION BY MONTH(date_created) ORDER BY count DESC) AS rank "
-    				+ "From (BOOK JOIN ISSUE on isbn = co_book_isbn) "
-    				+ "WHERE MONTH(date_created) = ‘1’ or  MONTH(date_created) = ‘2’); "
-    				+ "WHERE rank <=3 ORDER BY date_created, sname";
-    				
+    		janQuery = "SELECT sname, COUNT(DISTINCT issue_id) "
+    					+ "FROM ISSUE INNER JOIN BOOK ON co_book_isbn=isbn "
+    					+ "WHERE MONTH(date_created)='1' "
+    					+ "GROUP BY sname "
+    					+ "ORDER BY COUNT(DISTINCT issue_id) DESC "
+    					+ "LIMIT 3;";
+    		
+    		febQuery = "SELECT sname, COUNT(DISTINCT issue_id) "
+					+ "FROM ISSUE INNER JOIN BOOK ON co_book_isbn=isbn "
+					+ "WHERE MONTH(date_created)='2' "
+					+ "GROUP BY sname "
+					+ "ORDER BY COUNT(DISTINCT issue_id) DESC "
+					+ "LIMIT 3;";
+    		
     	} else if(type.equals("Frequent Users")) {
-    		query = "SELECT date_created, username, count "
+    		janQuery = "SELECT date_created, username, count "
     				+ "FROM (SELECT DISTINCT EXTRACT(MONTH FROM date_created), "
     				+ "username,  count(co_username) AS   count, RANK() "
     				+ "OVER (PARTITION BY MONTH(date_created) ORDER BY count DESC) AS rank "
@@ -109,7 +115,7 @@ public class OtherReports extends JPanel {
     				+ "WHERE rank <=5 ORDER BY date_created, title";
     		
     	} else if(type.equals("Popular Books")) {
-    		query = "SELECT EXTRACT(MONTH FROM(date_created), title, count "
+    		janQuery = "SELECT EXTRACT(MONTH FROM(date_created)), title, count "
     				+ "FROM (SELECT  DISTINCT EXTRACT(MONTH FROM date_created), "
     				+ "title,  count(co_book_isbn) AS count, RANK() "
     				+ "OVER (PARTITION BY MONTH(date_created) ORDER BY count DESC) AS rank "
@@ -121,8 +127,8 @@ public class OtherReports extends JPanel {
     		return;
     	}
     	
-    	System.out.println("Actual query: " + query);
-    	ResultSet rs = db.sendQuery(query);
+    	System.out.println("Actual query: " + janQuery);
+    	ResultSet rs = db.sendQuery(janQuery);
 		ArrayList<String> resValues = new ArrayList<String>();
 		
 		try {
