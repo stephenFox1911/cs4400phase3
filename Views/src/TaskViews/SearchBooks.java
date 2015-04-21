@@ -217,7 +217,12 @@ public class SearchBooks extends JPanel {
     	if(searchType.equals("EMPTY")) {
     		JOptionPane.showMessageDialog(this,"Please enter a search value");
     	} else {
-    		query += searchType+"=\'"+searchValue+"\' GROUP BY isbn;";
+    		if (!searchType.equals("title")) {
+    			query += searchType+"=\'"+searchValue+"\' GROUP BY isbn;";
+    		}
+    		else {
+    			query += searchType+" LIKE \'%"+searchValue+"%\' GROUP BY isbn;";
+    		}
     		rs = db.sendQuery(query);
     		try {
     			ArrayList resValues = new ArrayList();
