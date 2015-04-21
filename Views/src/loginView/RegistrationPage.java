@@ -406,6 +406,7 @@ public class RegistrationPage extends JPanel {
              * Resets the container its in;
              */
             public void actionPerformed(ActionEvent e) {
+            	dropIncompleteRegistration();
                 containedIn.reset();
             }
         });
@@ -433,6 +434,7 @@ public class RegistrationPage extends JPanel {
                 		textStreet.getText(), textCity.getText(), textState.getText(),
                 		textZIP.getText());
                 containedIn.reset();
+                clearFields();
             }
         });
     }
@@ -487,6 +489,17 @@ public class RegistrationPage extends JPanel {
         lblSelDep.setVisible(show);
         lblSelDep.getParent().revalidate();
 
+    }
+    
+    /*
+     * If a user backs out of registration without completing, 
+     * drop the user from the table (could cause errors if left in place)
+     */
+    public void dropIncompleteRegistration() {
+    	String query = "DELETE FROM NON_STAFF_USER WHERE NON_STAFF_USER.email=\"\"";
+    	DBdriver db = new DBdriver();
+    	db.sendUpdate(query);
+    	db.closeConnection();
     }
 
     /**
