@@ -168,9 +168,11 @@ public class Holds extends JPanel {
     	String query1 = String.format("SELECT COUNT( * ) >= ( SELECT COUNT( * ) "
     			+ "FROM COPY JOIN ISSUE ON COPY.copy_number = ISSUE.co_bcopy_no "
     			+ "AND COPY.book_isbn = ISSUE.co_book_isbn WHERE COPY.book_isbn = \"%s\" ) "
+    			, selected[1]);
     	String query2 = String.format("SELECT COUNT(*) < 1 "
     			+ "FROM NON_STAFF_USER, ISSUE WHERE NON_STAFF_USER.username=\"%s\" "
     			+ "AND NON_STAFF_USER.username=ISSUE.co_username "
+    			,selected[1]);
     	DBdriver db = new DBdriver();
     	ResultSet result1 = db.sendQuery(query1);
     	ResultSet result2 = db.sendQuery(query2);
