@@ -138,18 +138,19 @@ public class LoginPage extends JPanel {
              */
             public void actionPerformed(ActionEvent e) {
             	//If user is non-staff
-            	if(checkLogin(userNameField.getText(),passwordField.getText())==1) {
+            	int loginCode = checkLogin(userNameField.getText(),passwordField.getText());
+            	if(loginCode==1) {
             		MainFrame.showUserView(userNameField.getText(),passwordField.getText(),"student");
             		System.out.println("student");
                     clearFields();
             	}
-            	else if (checkLogin(userNameField.getText(),passwordField.getText())==3) {
+            	else if (loginCode==3) {
             		MainFrame.showUserView(userNameField.getText(),passwordField.getText(),"faculty");
             		System.out.println("fac");
                     clearFields();
             	}
             	//If user is staff
-            	else if(checkLogin(userNameField.getText(),passwordField.getText())==2) {
+            	else if(loginCode==2) {
             		MainFrame.showUserView(userNameField.getText(),passwordField.getText(),"staff");
             		System.out.println("staff");
             		clearFields();
