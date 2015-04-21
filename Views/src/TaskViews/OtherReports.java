@@ -127,10 +127,16 @@ public class OtherReports extends JPanel {
 		
 		try {
 			//while(rs.next()){
-				//resValues.add(rs.getString("sname"));
+				//test values
 				resValues.add("first value");
 				resValues.add("Second Value");
 				resValues.add("Third Value");
+				//actual values
+				/*
+				resValues.add(rs.getString(1));
+				resValues.add(rs.getString(2));
+				resValues.add(rs.getString(3));
+				*/
 			//}
 			Object[][] results = new Object[(resValues.size()/3)+1][3];
 			

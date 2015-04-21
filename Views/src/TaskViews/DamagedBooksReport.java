@@ -205,7 +205,6 @@ public class DamagedBooksReport extends JPanel {
 
 				try {
 					while(rs.next()){
-						//resValues.add(rs.getString("sname"));
 						resValues.add(rs.getString(1));
 						resValues.add(rs.getString(2));
 						resValues.add(rs.getString(3));
