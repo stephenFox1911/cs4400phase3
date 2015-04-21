@@ -209,7 +209,8 @@ public class SearchBooks extends JPanel {
     			+ "INNER JOIN (SELECT COPY.book_isbn, (COUNT( DISTINCT COPY.copy_number ) - "
     			+ "( SELECT COUNT( DISTINCT X.copy_number ) FROM COPY AS X	"
     			+ "WHERE (	X.is_damaged =1	OR X.is_checked_out =1 OR X.copy_number "
-    			+ "IN( SELECT co_bcopy_no FROM ISSUE WHERE (DATEDIFF(est_return_date, date_created) = 17) "
+    			+ "IN( SELECT co_bcopy_no FROM ISSUE WHERE (DATEDIFF(est_return_date, date_created) = 17 AND"
+    			+ " DATEDIFF(CURDATE(),date_created)<=3) "
     			+ "AND co_book_isbn = X.book_isbn)) AND COPY.book_isbn = X.book_isbn )) AS copy_count "
     			+ "FROM COPY GROUP BY book_isbn)TEMP ON BOOK.isbn = TEMP.book_isbn WHERE ";
     
