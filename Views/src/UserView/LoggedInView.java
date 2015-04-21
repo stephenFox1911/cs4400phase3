@@ -49,7 +49,7 @@ public class LoggedInView extends JPanel {
         JButton btnLogout = new JButton("Logout");
         btnLogout.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-                
+                userInterface.reset();
                 userInterface.setAndShowType("");
                 MainFrame.restartToLogin();
             }

@@ -169,10 +169,8 @@ public class Holds extends JPanel {
     			+ "FROM COPY JOIN ISSUE ON COPY.copy_number = ISSUE.co_bcopy_no "
     			+ "AND COPY.book_isbn = ISSUE.co_book_isbn WHERE COPY.book_isbn = \"%s\" ) "
     			, selected[1]);
-    	String query2 = String.format("SELECT COUNT(*) < 1 "
-    			+ "FROM NON_STAFF_USER, ISSUE WHERE NON_STAFF_USER.username=\"%s\" "
-    			+ "AND NON_STAFF_USER.username=ISSUE.co_username "
-    			,selected[1]);
+    	String query2 = String.format("SELECT COUNT(*) < 1 FROM ISSUE WHERE ISSUE.co_username = '%s' AND ISSUE.co_book_isbn = %s;"
+    			, containedIn.getCurrentUser(), selected[1]);
     	DBdriver db = new DBdriver();
     	ResultSet result1 = db.sendQuery(query1);
     	ResultSet result2 = db.sendQuery(query2);
@@ -208,6 +206,8 @@ public class Holds extends JPanel {
 					textEstReturnDate.setText(expRetDate);
 					textHoldRequestDate.setText(holdReqDate);
 					JOptionPane.showMessageDialog(this,"Hold successfully created.\n Your issue ID is: "+result5.getString(1));
+					db.closeConnection();
+					containedIn.showBookSearch();
 				}
 				else if (!result1.getBoolean(1)) {
 					JOptionPane.showMessageDialog(this,"All copies of this book are currently on hold or checked out.");
@@ -215,6 +215,7 @@ public class Holds extends JPanel {
 				else {
 					JOptionPane.showMessageDialog(this,"You already have a copy of this book on hold.");
 				}
+			
 			}
 		} catch (HeadlessException e) {
 			// TODO Auto-generated catch block
@@ -223,6 +224,7 @@ public class Holds extends JPanel {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+    	db.closeConnection();
     	System.out.println(selected[1]);
     	System.out.println(selected[2]);
     	System.out.println(selected[3]);

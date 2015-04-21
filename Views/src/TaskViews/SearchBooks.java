@@ -245,5 +245,11 @@ public class SearchBooks extends JPanel {
     	}
     	db.closeConnection();    	
     }
+	public void clearFields() {
+		textFieldISBN.setText("");
+		textFieldAuthor.setText("");
+		textFieldTitle.setText("");
+		
+	}
 
 }

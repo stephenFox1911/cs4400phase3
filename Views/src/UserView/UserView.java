@@ -15,7 +15,7 @@ public class UserView extends JPanel {
     private SearchResults results;
     private Holds holdsNow;
     private ExtensionRequest extRequest;
-    private String userType;
+    
     private FutureHoldRequest futHoldReq;
     private TrackBookLocation trackBook;
     private BookCheckout checkout;
@@ -26,8 +26,8 @@ public class UserView extends JPanel {
     private OtherReports frequentUser;
     private OtherReports popularSubject;
     
+    private String userType;
     private String userUN;
-    private String userPW;
 
 
     /**
@@ -89,6 +89,9 @@ public class UserView extends JPanel {
      * Resets all the panels and switches to book search
      */
     public void reset() {
+    	this.userType = "";
+    	this.userUN = "";
+    	bookSearch.clearFields();
 
     }
 
