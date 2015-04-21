@@ -506,6 +506,7 @@ public class RegistrationPage extends JPanel {
         textStreet.setText("");
         textCity.setText("");
         textZIP.setText("");
+        textState.setText("");
     }
 
 }

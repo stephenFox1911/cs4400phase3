@@ -184,7 +184,9 @@ public class TrackBookLocation extends JPanel {
     }
     
     public void getLocation(String isbn) {
-    	String query = String.format("SELECT BOOK.sname, BOOK.shelf_no, BOOK.shelf_floor_no, SHELF.aisle_number FROM BOOK INNER JOIN SHELF ON BOOK.shelf_no=SHELF.shelf_number WHERE BOOK.isbn=\"%s\" AND BOOK.shelf_floor_no=SHELF.fnumber",isbn);
+    	String query = String.format("SELECT BOOK.sname, BOOK.shelf_no, BOOK.shelf_floor_no, SHELF.aisle_number "
+    			+ "FROM BOOK INNER JOIN SHELF ON BOOK.shelf_no=SHELF.shelf_number WHERE BOOK.isbn=\"%s\" "
+    			+ "AND BOOK.shelf_floor_no=SHELF.fnumber",isbn);
     	DBdriver db = new DBdriver();
     	ResultSet result = db.sendQuery(query);
     	try {
