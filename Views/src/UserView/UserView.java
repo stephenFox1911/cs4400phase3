@@ -92,6 +92,7 @@ public class UserView extends JPanel {
     	this.userType = "";
     	this.userUN = "";
     	bookSearch.clearFields();
+    	extRequest.clearFields();
 
     }
 

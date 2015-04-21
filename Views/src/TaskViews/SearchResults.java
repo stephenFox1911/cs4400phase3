@@ -221,4 +221,7 @@ public class SearchResults extends JPanel {
         tableModel.changeData(header, results);
 
     }
+    public JButton getPlaceHoldButton(){
+    	return RequestHold;
+    }
 }

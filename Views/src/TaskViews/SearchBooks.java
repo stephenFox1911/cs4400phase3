@@ -220,6 +220,7 @@ public class SearchBooks extends JPanel {
     		else {
     			query += searchType+" LIKE \'%"+searchValue+"%\' GROUP BY isbn;";
     		}
+    		System.out.println(query);
     		rs = db.sendQuery(query);
     		try {
     			ArrayList resValues = new ArrayList();
