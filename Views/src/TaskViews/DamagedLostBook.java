@@ -187,13 +187,15 @@ public class DamagedLostBook extends JPanel {
     }
     
     public String getPreviousUser(String isbn,String copyNo) {
-    	String query = String.format("SELECT username,fname,lname FROM (SELECT NON_STAFF_USER.username AS username, NON_STAFF_USER.fname AS fname, NON_STAFF_USER.lname AS lname, ISSUE.est_return_date AS est_return_date FROM NON_STAFF_USER INNER JOIN ISSUE ON NON_STAFF_USER.username=ISSUE.co_username WHERE ISSUE.co_book_isbn=\"%s\" AND ISSUE.co_bcopy_no=%s AND est_return_date=(SELECT MIN(est_return_date) FROM ISSUE AS s)) AS t",isbn,copyNo);
+    	String query = String.format("SELECT co_username,  issue_id, CURDATE() FROM ISSUE WHERE co_book_isbn = '%s' "
+    			+ "AND co_bcopy_no = %s ORDER BY date_created DESC LIMIT 1;", isbn, copyNo);
     	System.out.println(query);
     	DBdriver db = new DBdriver();
     	ResultSet result = db.sendQuery(query);
     	try {
 			result.next();
-			txtLastuser.setText(result.getString("fname")+" "+result.getString("lname"));
+			txtLastuser.setText(result.getString(1));
+			txtCurrenttime.setText(result.getString(3));
 			return result.getString("username");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
