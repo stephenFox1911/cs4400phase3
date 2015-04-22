@@ -27,7 +27,7 @@ public class SearchResultTableModel extends NewTableModel {
 			selected = this.getSelected();
 			String query2 = "SELECT est_return_date FROM ISSUE "
 					+ "WHERE (co_book_isbn = %s) "
-					+ "ORDER BY est_return_date " + "LIMIT 1;";
+					+ "ORDER BY est_return_date DESC " + "LIMIT 1;";
 			if (((String) selected[4]).equals("0")) {
 				containedIn.getPlaceHoldButton().setEnabled(false);
 				
