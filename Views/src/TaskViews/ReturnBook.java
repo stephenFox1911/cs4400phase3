@@ -68,6 +68,13 @@ public class ReturnBook extends JPanel {
         add(textIssueID, gbc_textIssueID);
         textIssueID.setColumns(10);
         
+        JButton btnCheckId = new JButton("Check ID");
+        GridBagConstraints gbc_btnCheckId = new GridBagConstraints();
+        gbc_btnCheckId.insets = new Insets(0, 0, 5, 5);
+        gbc_btnCheckId.gridx = 3;
+        gbc_btnCheckId.gridy = 2;
+        add(btnCheckId, gbc_btnCheckId);
+        
         JLabel lblCopy = new JLabel("Copy #:");
         GridBagConstraints gbc_lblCopy = new GridBagConstraints();
         gbc_lblCopy.anchor = GridBagConstraints.EAST;
@@ -173,6 +180,11 @@ public class ReturnBook extends JPanel {
                 	containedIn.showBookSearch();
                 }
             }
+        });
+        
+        btnCheckId.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent arg0) {
+        	}
         });
         
 
