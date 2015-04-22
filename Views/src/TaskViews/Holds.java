@@ -171,14 +171,16 @@ public class Holds extends JPanel {
     			, selected[2]);
     	String query2 = String.format("SELECT COUNT(*) < 1 FROM ISSUE,COPY WHERE ISSUE.co_username = \"%s\" AND ISSUE.co_book_isbn = \"%s\" AND (COPY.is_checked_out=1 OR COPY.is_on_hold=1) AND COPY.book_isbn=ISSUE.co_book_isbn AND ISSUE.est_return_date>DATE(NOW())"
     			, containedIn.getCurrentUser(), selected[1]);
+    	String userDebQuery = String.format("SELECT is_debarred FROM NON_STAFF_USER WHERE username=\"%s\"",containedIn.getCurrentUser());
     	DBdriver db = new DBdriver();
     	ResultSet result1 = db.sendQuery(query1);
     	ResultSet result2 = db.sendQuery(query2);
+    	ResultSet resultDeb = db.sendQuery(userDebQuery);
     	try {
-			if (result1.next()&&result2.next()) {
-				System.out.println(result1.getBoolean(1));
-				System.out.println(result2.getBoolean(1));
-				if (result1.getBoolean(1)&&result2.getBoolean(1)) {
+			if (result1.next()&&result2.next()&&resultDeb.next()) {
+				//System.out.println(result1.getBoolean(1));
+				//System.out.println(result2.getBoolean(1));
+				if (result1.getBoolean(1)&&result2.getBoolean(1)&&!resultDeb.getBoolean(1)) {
 					//Get smallest copy # which is available for checkout
 					System.out.println("q3");
 					String query3 = String.format("SELECT c.copy_number, DATE_ADD(CURDATE(), INTERVAL 14 DAY), CURDATE() FROM COPY as c "
@@ -233,11 +235,13 @@ public class Holds extends JPanel {
 			e.printStackTrace();
 		}
     	db.closeConnection();
+    	/*
     	System.out.println(selected[1]);
     	System.out.println(selected[2]);
     	System.out.println(selected[3]);
     	System.out.println(selected[4]);
     	System.out.println(selected[5]);
+    	*/
     }
     
     public void setDate(String[] dates){
