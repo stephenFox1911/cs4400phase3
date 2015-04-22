@@ -130,6 +130,7 @@ public class FutureHoldRequest extends JPanel {
         btnBack.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	containedIn.showBookSearch();
+            	clearFields();
             }
         });
         
@@ -146,6 +147,12 @@ public class FutureHoldRequest extends JPanel {
             	JOptionPane.showMessageDialog(null,"Your future hold request has been placed!");
             }
         });
+    }
+    
+    public void clearFields(){
+    	txtIsbn.setText("");
+    	txtCopynumber.setText("");
+    	txtExpectedavailabledate.setText("");
     }
     
     public void getNextAvailCopy(String isbn) {
