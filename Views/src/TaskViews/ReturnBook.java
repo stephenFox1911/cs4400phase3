@@ -230,6 +230,12 @@ public class ReturnBook extends JPanel {
 								Math.min(bookCost * .5, daysOverdue * .5),
 								txtUserName.getText());
 				db.sendUpdate(updatePenaltiesQuery);
+				//Debar user if penalties > 100
+				String penQuery = String.format("SELECT total_penalties>100 FROM NON_STAFF_USER WHERE username=\"%s\"",txtUserName.getText());
+				ResultSet penResult = db.sendQuery(penQuery);
+				penResult.next();
+				String debarQuery = String.format("UPDATE NON_STAFF_USER SET is_debarred=%s WHERE username=\"%s\"",penResult.getString(1),txtUserName.getText());
+				db.sendUpdate(debarQuery);
 			}
 
 			// Unflag copy as being checked out
